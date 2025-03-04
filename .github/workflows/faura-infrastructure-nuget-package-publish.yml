@@ -1,0 +1,103 @@
+name: Build and Publish NuGet Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        description: 'Select the project to build and pack'
+        required: true
+        default: 'Faura.Infrastructure.Common'
+      version_type:
+        description: 'Select the version type'
+        required: true
+        default: 'preview'
+        options:
+          - 'major'
+          - 'minor'
+          - 'patch'
+          - 'preview'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '8.x'
+
+      - name: Get latest version from NuGet.org
+        run: |
+          PACKAGE_NAME=$(basename "${{ github.event.inputs.project }}" .csproj)
+
+          # Fetch the latest version from NuGet.org
+          LATEST_VERSION=$(curl -s "https://api.nuget.org/v3-flatcontainer/$PACKAGE_NAME/index.json" | \
+            jq -r '.versions[-1]')
+
+          if [ -z "$LATEST_VERSION" ]; then
+            echo "No version found for package $PACKAGE_NAME."
+            exit 1
+          fi
+
+          echo "Latest version: $LATEST_VERSION"
+          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+
+      - name: Determine new version
+        id: version
+        run: |
+          VERSION_TYPE="${{ github.event.inputs.version_type }}"
+          LATEST_VERSION="${{ env.LATEST_VERSION }}"
+
+          # Extract major, minor, patch from latest version (assumes format major.minor.patch or major.minor.patch-preview)
+          MAJOR=$(echo $LATEST_VERSION | cut -d. -f1)
+          MINOR=$(echo $LATEST_VERSION | cut -d. -f2)
+          PATCH=$(echo $LATEST_VERSION | cut -d. -f3 | cut -d- -f1) # Removes preview suffix if present
+
+          # If the latest version has a preview label, extract the preview number
+          PREVIEW_SUFFIX=$(echo $LATEST_VERSION | grep -oP '(?<=-preview\.)\d+' || echo "0")
+
+          # Increment version based on user input
+          if [ "$VERSION_TYPE" == "major" ]; then
+              NEW_VERSION="$((MAJOR + 1)).0.0"
+              
+          elif [ "$VERSION_TYPE" == "minor" ]; then
+              NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
+
+          elif [ "$VERSION_TYPE" == "patch" ]; then
+              echo $PREVIEW_SUFFIX
+              if [ "$PREVIEW_SUFFIX" -ne "0" ]; then
+                  NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+              elif [ "$PREVIEW_SUFFIX" -eq "0" ]; then
+                  NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+              fi
+              
+          elif [ "$VERSION_TYPE" == "preview" ]; then
+              # If the patch version is 0 and the preview is selected, we need to start from patch 1
+              if [ "$PATCH" -eq "0" ]; then
+              PATCH=1
+              fi
+
+              # Increment the preview number
+              NEW_PREVIEW_SUFFIX=$((PREVIEW_SUFFIX + 1))
+              NEW_VERSION="$MAJOR.$MINOR.$PATCH-preview.$NEW_PREVIEW_SUFFIX"
+          fi
+          echo "New version: $NEW_VERSION"
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      # - name: Restore dependencies
+      #   run: dotnet restore source/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj
+
+      # - name: Build project 
+      #   run: dotnet build source/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj --configuration Release
+
+      # - name: Build and Pack NuGet package
+      #   run: dotnet pack source/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj --configuration Release --output ./nuget-packages /p:PackageVersion=${{ env.NEW_VERSION }} /p:Version=${{ env.NEW_VERSION }} /p:AssemblyFileVersion=${{ env.NEW_VERSION }}
+
+      # - name: Push NuGet package to GitHub Packages
+      #   run: |
+      #     project_dir="/home/runner/work/faura/faura/nuget-packages"
+      #     dotnet nuget push "$project_dir/*.nupkg" --source https://nuget.pkg.github.com/JosepFe/index.json --api-key ${{ secrets.APIKEY_NUGET }}
