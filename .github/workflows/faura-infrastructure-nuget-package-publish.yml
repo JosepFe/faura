@@ -32,14 +32,17 @@ jobs:
       
       - name: Install NuGet CLI
         run: |
-          dotnet nuget locals all --clear
+          curl -L -o nuget.zip https://dist.nuget.org/win-x86-commandline/latest/nuget.zip
+          unzip -o nuget.zip -d nuget
+          chmod +x nuget/nuget
+          echo "$(pwd)/nuget" >> $GITHUB_PATH
             
       - name: Get latest version from NuGet.org
         run: |
           PACKAGE_NAME="${{ github.event.inputs.project }}"
-          
-          # Get the latest version from NuGet.org using dotnet CLI
-          LATEST_VERSION=$(dotnet nuget search $PACKAGE_NAME --prerelease --take 1 --source https://api.nuget.org/v3/index.json | awk 'NR==3 {print $2}')
+
+          # Obtener la versión más reciente del paquete, incluyendo pre-releases
+          LATEST_VERSION=$(nuget/nuget list $PACKAGE_NAME -PreRelease | grep "$PACKAGE_NAME" | awk '{print $2}')
 
           if [ -z "$LATEST_VERSION" ]; then
             echo "No version found for package $PACKAGE_NAME."
@@ -48,7 +51,6 @@ jobs:
 
           echo "Latest version: $LATEST_VERSION"
           echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
-
 
       - name: Determine new version
         id: version
