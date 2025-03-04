@@ -33,7 +33,10 @@ jobs:
       - name: Install Mono and NuGet
         run: |
           sudo apt-get update
-          sudo apt-get install -y mono-complete nuget
+          sudo apt-get install -y mono-complete
+          wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -O nuget.exe
+          sudo mv nuget.exe /usr/local/bin/nuget
+          sudo chmod +x /usr/local/bin/nuget
 
           LATEST_VERSION=$(nuget list $PACKAGE_NAME -PreRelease)
           echo "✅ Latest version found: $LATEST_VERSION"
