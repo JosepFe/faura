@@ -29,21 +29,16 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '8.x'
-      
-      - name: Install NuGet CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y mono-complete
-          wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -O nuget.exe
-          echo "alias nuget='mono $(pwd)/nuget.exe'" >> ~/.bashrc
-          source ~/.bashrc
+        
+      - name: Install jq (JSON parser)
+        run: sudo apt-get update && sudo apt-get install -y jq
             
       - name: Get latest version from NuGet.org
         run: |
           PACKAGE_NAME="${{ github.event.inputs.project }}"
-
-          # Obtener la versión más reciente del paquete, incluyendo pre-releases
-          LATEST_VERSION=$(nuget list $PACKAGE_NAME -PreRelease | grep "$PACKAGE_NAME" | awk '{print $2}')
+          
+          # Llamar a la API de NuGet.org para obtener la última versión del paquete
+          LATEST_VERSION=$(curl -s "https://api.nuget.org/v3-flatcontainer/$PACKAGE_NAME/index.json" | jq -r '.versions | last')
 
           if [ -z "$LATEST_VERSION" ]; then
             echo "No version found for package $PACKAGE_NAME."
