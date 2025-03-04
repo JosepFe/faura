@@ -29,14 +29,22 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '8.x'
+
+      - name: Install Mono and NuGet
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apt-transport-https dirmngr
+          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A
+          echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+          sudo apt-get update
+          sudo apt-get install -y mono-complete nuget
+
+          LATEST_VERSION=$(nuget list $PACKAGE_NAME -PreRelease)
+          echo "✅ Latest version found: $LATEST_VERSION"
         
       - name: Install NuGet and Get Latest Version
         run: |
-          sudo apt-get update && sudo apt-get install -y nuget jq
-
           PACKAGE_NAME="${{ github.event.inputs.project }}"
-
-          echo "$PACKAGE_NAME"
 
           # Obtener la última versión disponible en NuGet.org usando nuget
           LATEST_VERSION=$(nuget list $PACKAGE_NAME -PreRelease | grep "$PACKAGE_NAME" | awk '{print $2}')
