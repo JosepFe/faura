@@ -30,23 +30,25 @@ jobs:
         with:
           dotnet-version: '8.x'
         
-      - name: Install jq (JSON parser)
-        run: sudo apt-get update && sudo apt-get install -y jq
-            
-      - name: Get latest version from NuGet.org
+      - name: Install NuGet and Get Latest Version
         run: |
+          sudo apt-get update && sudo apt-get install -y nuget jq
+
           PACKAGE_NAME="${{ github.event.inputs.project }}"
-          
-          # Llamar a la API de NuGet.org para obtener la última versión del paquete
-          LATEST_VERSION=$(curl -s "https://api.nuget.org/v3-flatcontainer/$PACKAGE_NAME/index.json" | jq -r '.versions | last')
+
+          echo "$PACKAGE_NAME"
+
+          # Obtener la última versión disponible en NuGet.org usando nuget
+          LATEST_VERSION=$(nuget list $PACKAGE_NAME -PreRelease | grep "$PACKAGE_NAME" | awk '{print $2}')
 
           if [ -z "$LATEST_VERSION" ]; then
-            echo "No version found for package $PACKAGE_NAME."
+            echo "❌ No version found for package: $PACKAGE_NAME"
             exit 1
           fi
 
-          echo "Latest version: $LATEST_VERSION"
+          echo "✅ Latest version found: $LATEST_VERSION"
           echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+
 
       - name: Determine new version
         id: version
