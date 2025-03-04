@@ -30,12 +30,17 @@ jobs:
         with:
           dotnet-version: '8.x'
       
+      - name: Install NuGet CLI
+        run: |
+          curl -o nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+          echo "`pwd`" >> $GITHUB_PATH
+      
       - name: Get latest version from NuGet.org
         run: |
           PACKAGE_NAME=$(basename "${{ github.event.inputs.project }}" .csproj)
 
           # Use NuGet CLI to list the latest version (including pre-releases)
-          LATEST_VERSION=$(dotnet nuget search $PACKAGE_NAME --prerelease | grep "$PACKAGE_NAME" | awk '{print $2}')
+          LATEST_VERSION=$(nuget list $PACKAGE_NAME -PreRelease | grep "$PACKAGE_NAME" | awk '{print $2}')
 
           if [ -z "$LATEST_VERSION" ]; then
             echo "No version found for package $PACKAGE_NAME."
