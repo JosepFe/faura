@@ -33,7 +33,10 @@ jobs:
       - name: Install NuGet CLI
         run: |
           sudo apt-get update
-          sudo apt-get install -y nuget
+          sudo apt-get install -y mono-complete
+          wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -O nuget.exe
+          echo "alias nuget='mono $(pwd)/nuget.exe'" >> ~/.bashrc
+          source ~/.bashrc
             
       - name: Get latest version from NuGet.org
         run: |
