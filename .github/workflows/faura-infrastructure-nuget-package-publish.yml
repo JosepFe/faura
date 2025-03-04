@@ -40,7 +40,7 @@ jobs:
           PACKAGE_NAME=$(basename "${{ github.event.inputs.project }}" .csproj)
 
           # Use NuGet CLI to list the latest version (including pre-releases)
-          LATEST_VERSION=$(nuget list $PACKAGE_NAME -PreRelease | grep "$PACKAGE_NAME" | awk '{print $2}')
+          LATEST_VERSION=$(nuget.exe list $PACKAGE_NAME -PreRelease | grep "$PACKAGE_NAME" | awk '{print $2}')
 
           if [ -z "$LATEST_VERSION" ]; then
             echo "No version found for package $PACKAGE_NAME."
