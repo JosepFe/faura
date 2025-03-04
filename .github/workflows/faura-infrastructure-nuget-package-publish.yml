@@ -36,10 +36,10 @@ jobs:
             
       - name: Get latest version from NuGet.org
         run: |
-          PACKAGE_NAME=$(basename "${{ github.event.inputs.project }}" .csproj)
-
-          # Get the latest version using dotnet CLI
-          LATEST_VERSION=$(dotnet list package --highest-minor --include-prerelease --source https://api.nuget.org/v3/index.json | grep "$PACKAGE_NAME" | awk '{print $2}')
+          PACKAGE_NAME="${{ github.event.inputs.project }}"
+          
+          # Get the latest version from NuGet.org using dotnet CLI
+          LATEST_VERSION=$(dotnet nuget search $PACKAGE_NAME --prerelease --take 1 --source https://api.nuget.org/v3/index.json | awk 'NR==3 {print $2}')
 
           if [ -z "$LATEST_VERSION" ]; then
             echo "No version found for package $PACKAGE_NAME."
@@ -48,6 +48,7 @@ jobs:
 
           echo "Latest version: $LATEST_VERSION"
           echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+
 
       - name: Determine new version
         id: version
