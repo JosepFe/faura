@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Faura.Infrastructure.ApiBoostraper" Version="8.0.1-preview.1" />
+    <PackageReference Include="Faura.Infrastructure.Logger" Version="8.0.2-preview.1" />
+    <PackageReference Include="Faura.Infrastructure.Result" Version="8.0.1-preview.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+</Project>
