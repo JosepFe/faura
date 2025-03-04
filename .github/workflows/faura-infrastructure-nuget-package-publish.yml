@@ -32,17 +32,15 @@ jobs:
       
       - name: Install NuGet CLI
         run: |
-          curl -L -o nuget.zip https://dist.nuget.org/win-x86-commandline/latest/nuget.zip
-          unzip -o nuget.zip -d nuget
-          chmod +x nuget/nuget
-          echo "$(pwd)/nuget" >> $GITHUB_PATH
+          sudo apt-get update
+          sudo apt-get install -y nuget
             
       - name: Get latest version from NuGet.org
         run: |
           PACKAGE_NAME="${{ github.event.inputs.project }}"
 
           # Obtener la versión más reciente del paquete, incluyendo pre-releases
-          LATEST_VERSION=$(nuget/nuget list $PACKAGE_NAME -PreRelease | grep "$PACKAGE_NAME" | awk '{print $2}')
+          LATEST_VERSION=$(nuget list $PACKAGE_NAME -PreRelease | grep "$PACKAGE_NAME" | awk '{print $2}')
 
           if [ -z "$LATEST_VERSION" ]; then
             echo "No version found for package $PACKAGE_NAME."
