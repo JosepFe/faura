@@ -32,18 +32,10 @@ jobs:
 
       - name: Get latest version from NuGet.org
         run: |
-          wget https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-          dpkg -i packages-microsoft-prod.deb
-          rm packages-microsoft-prod.deb
-
-          apt-get update
-          apt-get install -y dotnet-sdk-8.0
-          
           PACKAGE_NAME=$(basename "${{ github.event.inputs.project }}" .csproj)
 
-          # Fetch the latest version from NuGet.org
-          LATEST_VERSION=$(curl -s "https://api.nuget.org/v3-flatcontainer/$PACKAGE_NAME/index.json" | \
-            jq -r '.versions[-1]')
+          # Use NuGet CLI to list the latest version (including pre-releases)
+          LATEST_VERSION=$(mono nuget.exe list $PACKAGE_NAME -PreRelease | grep "$PACKAGE_NAME" | awk '{print $2}')
 
           if [ -z "$LATEST_VERSION" ]; then
             echo "No version found for package $PACKAGE_NAME."
