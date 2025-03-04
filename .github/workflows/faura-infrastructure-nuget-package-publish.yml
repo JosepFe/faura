@@ -33,10 +33,6 @@ jobs:
       - name: Install Mono and NuGet
         run: |
           sudo apt-get update
-          sudo apt-get install -y apt-transport-https dirmngr
-          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A
-          echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
-          sudo apt-get update
           sudo apt-get install -y mono-complete nuget
 
           LATEST_VERSION=$(nuget list $PACKAGE_NAME -PreRelease)
