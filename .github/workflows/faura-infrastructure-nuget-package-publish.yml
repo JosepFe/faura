@@ -30,16 +30,20 @@ jobs:
         with:
           dotnet-version: '8.x'
 
+      # - name: Install Mono and NuGet
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y mono-complete
+      #     wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -O nuget.exe
+      #     sudo mv nuget.exe /usr/local/bin/nuget
+      #     sudo chmod +x /usr/local/bin/nuget
+
       - name: Install Mono and NuGet
         run: |
-          sudo apt-get update
-          sudo apt-get install -y mono-complete
-          wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -O nuget.exe
-          sudo mv nuget.exe /usr/local/bin/nuget
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends mono-runtime ca-certificates
+          wget -q https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -O /usr/local/bin/nuget
           sudo chmod +x /usr/local/bin/nuget
-
-          LATEST_VERSION=$(nuget list $PACKAGE_NAME -PreRelease)
-          echo "✅ Latest version found: $LATEST_VERSION"
         
       - name: Install NuGet and Get Latest Version
         run: |
