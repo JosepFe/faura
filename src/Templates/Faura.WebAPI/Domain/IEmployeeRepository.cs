@@ -1,7 +1,7 @@
-﻿using Faura.Infrastructure.UnitOfWork.Generated;
+﻿using Faura.Infrastructure.UnitOfWork.Repositories;
 using Faura.WebAPI.Domain.Entities;
 namespace Faura.WebAPI.Domain;
 
-public interface IEmployeeRepository : IRepository<Employee>
+public interface IEmployeeRepository : IEntityRepository<Employee>
 {
 }

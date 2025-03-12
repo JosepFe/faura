@@ -1,6 +1,8 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.Generated;
+﻿namespace Faura.Infrastructure.UnitOfWork.Repositories;
 
+using Faura.Infrastructure.UnitOfWork.Enums;
 using Faura.Infrastructure.UnitOfWork.Exceptions;
+using Faura.Infrastructure.UnitOfWork.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -11,10 +13,10 @@ using System.Runtime.CompilerServices;
 /// Generic repository implementation for data access operations
 /// </summary>
 /// <typeparam name="TEntity">The entity type this repository works with</typeparam>
-public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : class
 {
     private readonly DbContext _dbContext;
-    private readonly ILogger<Repository<TEntity>> _logger;
+    private readonly ILogger<EntityRepository<TEntity>> _logger;
     private readonly bool _enableTracking;
 
     /// <summary>
@@ -23,9 +25,9 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     /// <param name="dbContext">Database context to use for operations</param>
     /// <param name="logger">Logger for capturing operation information</param>
     /// <param name="enableTracking">Whether to enable entity tracking</param>
-    public Repository(
+    public EntityRepository(
         DbContext dbContext,
-        ILogger<Repository<TEntity>> logger,
+        ILogger<EntityRepository<TEntity>> logger,
         bool enableTracking = false)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));

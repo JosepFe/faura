@@ -1,13 +1,10 @@
-using Faura.Infrastructure.Logger.Extensions;
-using Faura.Infrastructure.Result;
-using Faura.Infrastructure.UnitOfWork.UnitOfWork;
+namespace Faura.WebAPI.Controllers;
+
 using Faura.WebAPI.Domain;
 using Faura.WebAPI.Domain.Entities;
 using Faura.WebAPI.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
 
-namespace Faura.WebAPI.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase

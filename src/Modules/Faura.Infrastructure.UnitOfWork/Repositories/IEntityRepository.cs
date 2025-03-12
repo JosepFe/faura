@@ -1,13 +1,14 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.Generated;
+﻿namespace Faura.Infrastructure.UnitOfWork.Repositories;
 
-using Microsoft.Data.SqlClient;
+using Faura.Infrastructure.UnitOfWork.Enums;
+using Faura.Infrastructure.UnitOfWork.Models;
 using System.Linq.Expressions;
 
 /// <summary>
 /// Repository interface for entity operations
 /// </summary>
 /// <typeparam name="TEntity">Entity type</typeparam>
-public interface IRepository<TEntity> where TEntity : class
+public interface IEntityRepository<TEntity> where TEntity : class
 {
     /// <summary>
     /// Creates a new entity

@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.Generated;
+﻿namespace Faura.Infrastructure.UnitOfWork.Enums;
 
 /// <summary>
 /// Direction for sorting operations

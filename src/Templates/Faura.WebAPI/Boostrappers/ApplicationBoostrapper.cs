@@ -12,8 +12,8 @@ public static class ApplicationBoostrapper
 {
     public static WebApplicationBuilder RegisterApplicationDependencies(this WebApplicationBuilder builder)
     {
-        builder.Services.SetupUnitOfWork();
         builder.Services.SetupDatabase(builder.Configuration);
+
         builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         builder.Services.AddScoped<IEmployeeUoW, EmployeeUoW>();
         return builder;
@@ -26,6 +26,7 @@ public static class ApplicationBoostrapper
     /// <param name="configuration"></param>
     private static void SetupDatabase(this IServiceCollection services, IConfiguration configuration)
     {
+        services.SetupUnitOfWork();
         services.ConfigureDatabase<EmployeeDbContext>(configuration, "Employee", DatabaseType.PostgreSQL, ServiceLifetime.Scoped).ConfigureAwait(false);
     }
 }

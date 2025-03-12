@@ -1,4 +1,4 @@
-namespace Faura.Infrastructure.UnitOfWork.Projector;
+namespace Faura.Infrastructure.UnitOfWork.Projectors;
 
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;

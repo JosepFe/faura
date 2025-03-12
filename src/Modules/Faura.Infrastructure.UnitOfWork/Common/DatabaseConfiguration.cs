@@ -17,7 +17,7 @@ public static class DatabaseConfigurator
         this IServiceCollection services,
         string connectionString,
         DatabaseType databaseType,
-        ServiceLifetime serviceLifetime = ServiceLifetime.Transient) where TContext : DbContext
+        ServiceLifetime serviceLifetime = ServiceLifetime.Scoped) where TContext : DbContext
     {
         if (string.IsNullOrWhiteSpace(connectionString))
             throw new ArgumentException("Connection string cannot be null or empty.", nameof(connectionString));
@@ -30,7 +30,7 @@ public static class DatabaseConfigurator
         IConfiguration configuration,
         string connectionStringName,
         DatabaseType databaseType,
-        ServiceLifetime serviceLifetime = ServiceLifetime.Transient,
+        ServiceLifetime serviceLifetime = ServiceLifetime.Scoped,
         bool runMigrations = false) where TContext : DbContext
     {
         var connectionString = configuration.GetConnectionString(connectionStringName)
