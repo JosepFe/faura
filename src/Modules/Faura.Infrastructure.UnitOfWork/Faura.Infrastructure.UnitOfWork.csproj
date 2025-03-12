@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Description>Faura UoW library</Description>
+		<license>https://github.com/JosepFe/faura/blob/master/LICENSE</license>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>faura;log</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReleaseNotes>NET 8.0+ compatibility version</PackageReleaseNotes>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>
+	</PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.14" />
+      <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.14" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="8.0.14" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.14" />      
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.14" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.14" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.14" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
+      <PackageReference Include="Dapper" Version="2.1.66" />
+    </ItemGroup>
+
+</Project>

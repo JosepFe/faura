@@ -10,7 +10,11 @@
     <PackageReference Include="Faura.Infrastructure.ApiBoostraper" Version="8.0.1-preview.1" />
     <PackageReference Include="Faura.Infrastructure.Logger" Version="8.0.2-preview.1" />
     <PackageReference Include="Faura.Infrastructure.Result" Version="8.0.1-preview.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Faura.Infrastructure.UnitOfWork\Faura.Infrastructure.UnitOfWork.csproj" />
   </ItemGroup>
 
 </Project>
