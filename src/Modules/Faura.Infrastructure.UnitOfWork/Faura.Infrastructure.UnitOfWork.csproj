@@ -7,7 +7,7 @@
 		<Description>Faura UoW library</Description>
 		<license>https://github.com/JosepFe/faura/blob/master/LICENSE</license>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>faura;log</PackageTags>
+		<PackageTags>faura;uow</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>NET 8.0+ compatibility version</PackageReleaseNotes>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
