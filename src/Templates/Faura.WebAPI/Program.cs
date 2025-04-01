@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.BootstrapCommonFauraServices();
 builder.RegisterDependencies();
+builder.RegisterApplicationDependencies();
 
 var app = builder.Build();
 
