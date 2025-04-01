@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Faura.WebAPI", "Templates\F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Faura.Infrastructure.UnitOfWork", "Modules\Faura.Infrastructure.UnitOfWork\Faura.Infrastructure.UnitOfWork.csproj", "{F749C616-5B16-4A0B-9F88-D08BEAA5F27B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Faura.Infrastructure.ApachePulsar", "Modules\Faura.Infrastructure.ApachePulsar\Faura.Infrastructure.ApachePulsar.csproj", "{E20B9BD9-F326-406A-81D9-BC8D4AD84D89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{F749C616-5B16-4A0B-9F88-D08BEAA5F27B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F749C616-5B16-4A0B-9F88-D08BEAA5F27B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F749C616-5B16-4A0B-9F88-D08BEAA5F27B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E20B9BD9-F326-406A-81D9-BC8D4AD84D89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E20B9BD9-F326-406A-81D9-BC8D4AD84D89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E20B9BD9-F326-406A-81D9-BC8D4AD84D89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E20B9BD9-F326-406A-81D9-BC8D4AD84D89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{1F34C695-2396-428D-87EF-7D3FDD9BD8C2} = {420A3EFF-9247-407D-B58F-EC8144EB14F4}
 		{2B690895-0614-4013-85D8-7FC47B956C26} = {0C2B5D2F-B5EE-48E0-ACEE-A064E0232A26}
 		{F749C616-5B16-4A0B-9F88-D08BEAA5F27B} = {420A3EFF-9247-407D-B58F-EC8144EB14F4}
+		{E20B9BD9-F326-406A-81D9-BC8D4AD84D89} = {420A3EFF-9247-407D-B58F-EC8144EB14F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7B487365-BA97-49F1-93FD-C12DB361C20B}

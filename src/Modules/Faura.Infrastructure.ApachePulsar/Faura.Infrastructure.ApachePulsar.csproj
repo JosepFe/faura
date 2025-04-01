@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Description>Faura Apache Pulsar Handler Library</Description>
+		<license>https://github.com/JosepFe/faura/blob/master/LICENSE</license>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>faura;apachePulsar;pulsar;queues;topics;serviceBus</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReleaseNotes>NET 8.0+ compatibility version</PackageReleaseNotes>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotPulsar" Version="4.2.2" />
+    <PackageReference Include="DotPulsar.Extensions.DependencyInjection" Version="0.3.0" />
+    <PackageReference Include="Faura.Infrastructure.Common" Version="8.0.2-preview.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>
