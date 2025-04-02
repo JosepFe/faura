@@ -97,7 +97,7 @@ jobs:
       - name: Build and Pack NuGet package
         run: dotnet pack src/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj --configuration Release --output ./nuget-packages /p:PackageVersion=${{ env.NEW_VERSION }} /p:Version=${{ env.NEW_VERSION }} /p:AssemblyFileVersion=${{ env.NEW_VERSION }}
 
-      # - name: Push NuGet package to GitHub Packages
-      #   run: |
-      #     project_dir="/home/runner/work/faura/faura/nuget-packages"
-      #     dotnet nuget push "$project_dir/*.nupkg" --source https://nuget.pkg.github.com/JosepFe/index.json --api-key ${{ secrets.APIKEY_NUGET }}
+      - name: Push NuGet package to GitHub Packages
+        run: |
+          project_dir="/home/runner/work/faura/faura/nuget-packages"
+          dotnet nuget push "$project_dir/*.nupkg" --source https://nuget.pkg.github.com/JosepFe/index.json --api-key ${{ secrets.APIKEY_NUGET }}
