@@ -11,7 +11,7 @@ public static class WebApplicationBuilderExtensions
         builder.Services.ConfigureControllers();
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.SetUpSwagger(builder.Configuration);
 
         builder.Services.AddHeadersPropagation(builder.Configuration);
         return builder;

@@ -7,7 +7,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 
 /// <summary>
 /// Generic repository implementation for data access operations
