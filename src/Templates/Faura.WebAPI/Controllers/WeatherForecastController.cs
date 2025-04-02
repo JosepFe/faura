@@ -3,6 +3,7 @@ namespace Faura.WebAPI.Controllers;
 using Faura.WebAPI.Domain;
 using Faura.WebAPI.Domain.Entities;
 using Faura.WebAPI.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -48,4 +49,13 @@ public class WeatherForecastController : ControllerBase
         })
         .ToArray();
     }
+
+    [HttpGet("Test")]
+    [Authorize]
+    public string GetTst()
+    {
+        return "Hola";
+    }
+
+
 }
