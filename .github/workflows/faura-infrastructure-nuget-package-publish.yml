@@ -89,13 +89,13 @@ jobs:
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
       - name: Restore dependencies
-        run: dotnet restore source/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj
+        run: dotnet restore src/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj
 
       - name: Build project 
-        run: dotnet build source/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj --configuration Release
+        run: dotnet build src/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj --configuration Release
 
       - name: Build and Pack NuGet package
-        run: dotnet pack source/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj --configuration Release --output ./nuget-packages /p:PackageVersion=${{ env.NEW_VERSION }} /p:Version=${{ env.NEW_VERSION }} /p:AssemblyFileVersion=${{ env.NEW_VERSION }}
+        run: dotnet pack src/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj --configuration Release --output ./nuget-packages /p:PackageVersion=${{ env.NEW_VERSION }} /p:Version=${{ env.NEW_VERSION }} /p:AssemblyFileVersion=${{ env.NEW_VERSION }}
 
       # - name: Push NuGet package to GitHub Packages
       #   run: |
