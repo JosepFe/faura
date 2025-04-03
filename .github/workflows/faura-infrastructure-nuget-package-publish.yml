@@ -32,7 +32,7 @@ jobs:
 
       - name: Get latest version from NuGet.org
         run: |
-          PACKAGE_NAME=$(basename "${{ github.event.inputs.project }}" .csproj)
+          PACKAGE_NAME="${INPUT_PROJECT%.csproj}"
 
           # Fetch the latest version from NuGet.org
           LATEST_VERSION=$(curl -s "https://api.nuget.org/v3-flatcontainer/$PACKAGE_NAME/index.json" | \
@@ -45,6 +45,8 @@ jobs:
 
           echo "Latest version: $LATEST_VERSION"
           echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+        env:
+          INPUT_PROJECT: "${{ github.event.inputs.project }}"
 
       - name: Determine new version
         id: version
