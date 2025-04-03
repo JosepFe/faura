@@ -10,7 +10,7 @@ public static class LogFileExtensions
 
     public static LoggerConfiguration ConfigureLogFile(this LoggerConfiguration loggerConfiguration, IConfiguration configuration)
     {
-        var fileOptions = configuration.GetSection(LogFileOptions.SectionName).Get<LogFileOptions>();
+        var fileOptions = configuration.GetSection(LogFileOptions.SectionName).Get<LogFileOptions>() ?? new LogFileOptions();
 
         if (!fileOptions.Enable) return loggerConfiguration;
 

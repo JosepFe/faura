@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Faura.Infrastructure.Logger" Version="8.0.2-preview.1" />
     <PackageReference Include="Faura.Infrastructure.Result" Version="8.0.1-preview.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
   </ItemGroup>
@@ -15,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Modules\Faura.Infrastructure.ApiBoostraper\Faura.Infrastructure.ApiBoostraper.csproj" />
     <ProjectReference Include="..\..\Modules\Faura.Infrastructure.JWT\Faura.Infrastructure.JWT.csproj" />
+    <ProjectReference Include="..\..\Modules\Faura.Infrastructure.Logger\Faura.Infrastructure.Logger.csproj" />
     <ProjectReference Include="..\..\Modules\Faura.Infrastructure.UnitOfWork\Faura.Infrastructure.UnitOfWork.csproj" />
   </ItemGroup>
 

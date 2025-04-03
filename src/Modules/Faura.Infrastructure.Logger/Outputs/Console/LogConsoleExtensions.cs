@@ -10,7 +10,7 @@ public static class LogConsoleExtensions
 
     public static LoggerConfiguration ConfigureLogConsole(this LoggerConfiguration loggerConfiguration, IConfiguration configuration, List<ILogEventEnricher> logEnrichers = null)
     {
-        var consoleOptions = configuration.GetSection(LogConsoleOptions.SectionName).Get<LogConsoleOptions>();
+        var consoleOptions = configuration.GetSection(LogConsoleOptions.SectionName).Get<LogConsoleOptions>() ?? new LogConsoleOptions();
 
         if (!consoleOptions.Enable) return loggerConfiguration;
 

@@ -8,7 +8,7 @@ public static class LogSeqExtensions
 {
     public static LoggerConfiguration ConfigureLogSeq(this LoggerConfiguration loggerConfiguration, IConfiguration configuration, List<ILogEventEnricher> logEnrichers = null)
     {
-        var seqOptions = configuration.GetSection(LogSeqOptions.SectionName).Get<LogSeqOptions>();
+        var seqOptions = configuration.GetSection(LogSeqOptions.SectionName).Get<LogSeqOptions>() ?? new LogSeqOptions();
 
         if (!seqOptions.Enable) return loggerConfiguration;
         return loggerConfiguration
