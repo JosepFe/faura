@@ -100,4 +100,4 @@ jobs:
       - name: Push NuGet package to GitHub Packages
         run: |
           project_dir="/home/runner/work/faura/faura/nuget-packages"
-          dotnet nuget push "$project_dir/*.nupkg" --source https://nuget.pkg.github.com/JosepFe/index.json --api-key ${{ secrets.APIKEY_NUGET }}
+          dotnet nuget push "$project_dir/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.APIKEY_NUGET }}
