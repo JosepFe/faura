@@ -32,17 +32,15 @@ jobs:
 
       - name: Get latest version from NuGet.org
         run: |
-          # Extract package name (no .csproj needed if input is already correct)
           PACKAGE_NAME="${{ github.event.inputs.project }}"
+          PACKAGE_NAME_LOWER=$(echo "$PACKAGE_NAME" | tr '[:upper:]' '[:lower:]')  # Force lowercase
+          API_URL="https://api.nuget.org/v3-flatcontainer/$PACKAGE_NAME_LOWER/index.json"
           
-          # Fetch the latest version from NuGet.org (with error handling)
-          API_URL="https://api.nuget.org/v3-flatcontainer/$PACKAGE_NAME/index.json"
-          echo "Fetching version from: $API_URL"
-          
+          echo "Checking package: $PACKAGE_NAME_LOWER"
           LATEST_VERSION=$(curl -sf "$API_URL" | jq -r '.versions[-1]')
           
           if [ -z "$LATEST_VERSION" ]; then
-            echo "::error::No versions found for package '$PACKAGE_NAME' on NuGet.org."
+            echo "::error::Package '$PACKAGE_NAME' not found. Check spelling or publish it."
             exit 1
           fi
           
