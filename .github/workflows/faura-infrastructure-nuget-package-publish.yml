@@ -32,17 +32,18 @@ jobs:
 
       - name: Get latest version from NuGet.org
         run: |
-          PACKAGE_NAME=$(basename "${{ github.event.inputs.project }}" .csproj)
-
-          # Fetch the latest version from NuGet.org
-          LATEST_VERSION=$(curl -s "https://api.nuget.org/v3-flatcontainer/$PACKAGE_NAME/index.json" | \
-            jq -r '.versions[-1]')
-
+          PACKAGE_NAME="${{ github.event.inputs.project }}"
+          PACKAGE_NAME_LOWER=$(echo "$PACKAGE_NAME" | tr '[:upper:]' '[:lower:]')  # Force lowercase
+          API_URL="https://api.nuget.org/v3-flatcontainer/$PACKAGE_NAME_LOWER/index.json"
+          
+          echo "Checking package: $PACKAGE_NAME_LOWER"
+          LATEST_VERSION=$(curl -sf "$API_URL" | jq -r '.versions[-1]')
+          
           if [ -z "$LATEST_VERSION" ]; then
-            echo "No version found for package $PACKAGE_NAME."
+            echo "::error::Package '$PACKAGE_NAME' not found. Check spelling or publish it."
             exit 1
           fi
-
+          
           echo "Latest version: $LATEST_VERSION"
           echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
 
@@ -88,16 +89,16 @@ jobs:
           echo "New version: $NEW_VERSION"
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
-      # - name: Restore dependencies
-      #   run: dotnet restore source/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj
+      - name: Restore dependencies
+        run: dotnet restore src/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj
 
-      # - name: Build project 
-      #   run: dotnet build source/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj --configuration Release
+      - name: Build project 
+        run: dotnet build src/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj --configuration Release
 
-      # - name: Build and Pack NuGet package
-      #   run: dotnet pack source/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj --configuration Release --output ./nuget-packages /p:PackageVersion=${{ env.NEW_VERSION }} /p:Version=${{ env.NEW_VERSION }} /p:AssemblyFileVersion=${{ env.NEW_VERSION }}
+      - name: Build and Pack NuGet package
+        run: dotnet pack src/Modules/${{ github.event.inputs.project }}/${{ github.event.inputs.project }}.csproj --configuration Release --output ./nuget-packages /p:PackageVersion=${{ env.NEW_VERSION }} /p:Version=${{ env.NEW_VERSION }} /p:AssemblyFileVersion=${{ env.NEW_VERSION }}
 
-      # - name: Push NuGet package to GitHub Packages
-      #   run: |
-      #     project_dir="/home/runner/work/faura/faura/nuget-packages"
-      #     dotnet nuget push "$project_dir/*.nupkg" --source https://nuget.pkg.github.com/JosepFe/index.json --api-key ${{ secrets.APIKEY_NUGET }}
+      - name: Push NuGet package to GitHub Packages
+        run: |
+          project_dir="/home/runner/work/faura/faura/nuget-packages"
+          dotnet nuget push "$project_dir/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.APIKEY_NUGET }}
