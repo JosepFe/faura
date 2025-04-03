@@ -32,21 +32,22 @@ jobs:
 
       - name: Get latest version from NuGet.org
         run: |
-          PACKAGE_NAME="${INPUT_PROJECT%.csproj}"
-
-          # Fetch the latest version from NuGet.org
-          LATEST_VERSION=$(curl -s "https://api.nuget.org/v3-flatcontainer/$PACKAGE_NAME/index.json" | \
-            jq -r '.versions[-1]')
-
+          # Extract package name (no .csproj needed if input is already correct)
+          PACKAGE_NAME="${{ github.event.inputs.project }}"
+          
+          # Fetch the latest version from NuGet.org (with error handling)
+          API_URL="https://api.nuget.org/v3-flatcontainer/$PACKAGE_NAME/index.json"
+          echo "Fetching version from: $API_URL"
+          
+          LATEST_VERSION=$(curl -sf "$API_URL" | jq -r '.versions[-1]')
+          
           if [ -z "$LATEST_VERSION" ]; then
-            echo "No version found for package $PACKAGE_NAME."
+            echo "::error::No versions found for package '$PACKAGE_NAME' on NuGet.org."
             exit 1
           fi
-
+          
           echo "Latest version: $LATEST_VERSION"
           echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
-        env:
-          INPUT_PROJECT: "${{ github.event.inputs.project }}"
 
       - name: Determine new version
         id: version
