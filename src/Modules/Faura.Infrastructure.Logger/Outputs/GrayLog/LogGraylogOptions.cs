@@ -4,7 +4,7 @@ public class LogGraylogOptions
 {
     public const string SectionName = "Logging:Outputs:Graylog";
 
-    public bool Enable {  get; set; }
+    public bool Enable { get; set; } = false;
     public string GrayLogHost { get; set; }
     public int GrayLogPort { get; set; }
     public string GrayLogProtocol { get; set; }

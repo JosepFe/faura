@@ -10,7 +10,7 @@ public static class LogSqLiteDbExtensions
 
     public static LoggerConfiguration ConfigureLogSqLiteDb(this LoggerConfiguration loggerConfiguration, IConfiguration configuration)
     {
-        var sqLiteDbOptions = configuration.GetSection(LogSqLiteDbOptions.SectionName).Get<LogSqLiteDbOptions>();
+        var sqLiteDbOptions = configuration.GetSection(LogSqLiteDbOptions.SectionName).Get<LogSqLiteDbOptions>() ?? new LogSqLiteDbOptions();
 
         if (!sqLiteDbOptions.Enable) return loggerConfiguration;
 
