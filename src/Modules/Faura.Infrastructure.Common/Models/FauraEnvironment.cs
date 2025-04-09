@@ -20,6 +20,7 @@ public static class FauraEnvironment
     public static bool IsProduction => CurrentMode == FauraDeploymentMode.Production;
     public static bool IsLocal => CurrentMode == FauraDeploymentMode.Local;
     public static bool IsTest => CurrentMode == FauraDeploymentMode.Test;
+    public static bool IsDevelopment => CurrentMode == FauraDeploymentMode.Development;
 
     private static FauraDeploymentMode DetectMode()
     {
@@ -27,7 +28,7 @@ public static class FauraEnvironment
         return mode switch
         {
             nameof(FauraDeploymentMode.Local) => FauraDeploymentMode.Local,
-            nameof(FauraDeploymentMode.Test) => FauraDeploymentMode.Test,
+            nameof(FauraDeploymentMode.Test) => FauraDeploymentMode.Test           ,
             nameof(FauraDeploymentMode.Development) => FauraDeploymentMode.Development,
             nameof(FauraDeploymentMode.Integration) => FauraDeploymentMode.Integration,
             nameof(FauraDeploymentMode.Staging) => FauraDeploymentMode.Staging,
