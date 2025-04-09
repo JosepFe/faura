@@ -3,7 +3,8 @@ using Faura.WebAPI.Boostrappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.BootstrapCommonFauraServices();
+var a = builder.Configuration.Sources;
+
 builder.RegisterDependencies();
 builder.RegisterApplicationDependencies();
 
