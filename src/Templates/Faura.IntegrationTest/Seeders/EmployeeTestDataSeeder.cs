@@ -12,6 +12,6 @@ public class EmployeeTestDataSeeder : TestDataSeeder<EmployeeDbContext>
     {
         var repo = scopedProvider.GetRequiredService<IEmployeeRepository>();
 
-        return repo.CreateAsync(new Employee("Josep", "Ferrandis", "josep@example.com"));
+        return repo.CreateAsync(new Employee("User", "Example", "user@example.com"));
     }
 }

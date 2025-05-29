@@ -32,15 +32,15 @@ public class CustomWebApplicationFactory<TEntryPoint> : BaseWebApplicationFactor
         var pgOptions = containerOptions!.Postgres;
 
         var pgConfig = new PostgresContainerConfiguration(pgOptions);
-        var containerManager = new TestContainerInstance<PostgresContainerConfiguration>(pgConfig);
+        var containerInstance = new TestContainerInstance<PostgresContainerConfiguration>(pgConfig);
 
-        await containerManager.StartAsync();
+        await containerInstance.StartAsync();
 
         return new ConfigurationBuilder()
             .AddConfiguration(configuration)
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["ConnectionStrings:Employee"] = containerManager.ConnectionString
+                ["ConnectionStrings:Employee"] = containerInstance.ConnectionString
             })
             .Build();
     }
