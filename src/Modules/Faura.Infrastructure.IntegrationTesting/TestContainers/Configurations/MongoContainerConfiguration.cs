@@ -1,4 +1,5 @@
 ﻿using Faura.Infrastructure.IntegrationTesting.Options;
+using Faura.Infrastructure.IntegrationTesting.TestContainers.Constants;
 using Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
 
 namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Configurations;
@@ -14,13 +15,13 @@ public class MongoContainerConfiguration : ITestContainerConfiguration
 
     public string Image =>
         string.IsNullOrWhiteSpace(_options.Image)
-            ? ContainerDefaults.Images.Mongo
+            ? ContainerDefaultsConstants.Images.Mongo
             : _options.Image;
 
     public int Port =>
         _options.Port != 0
             ? _options.Port
-            : ContainerDefaults.Ports.Mongo;
+            : ContainerDefaultsConstants.Ports.Mongo;
 
     public string Username => _options.Username ?? string.Empty;
     public string Password => _options.Password ?? string.Empty;

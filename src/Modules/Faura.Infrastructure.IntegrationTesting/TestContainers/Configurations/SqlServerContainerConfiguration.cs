@@ -1,4 +1,5 @@
 ﻿using Faura.Infrastructure.IntegrationTesting.Options;
+using Faura.Infrastructure.IntegrationTesting.TestContainers.Constants;
 using Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
 
 namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Configurations;
@@ -13,12 +14,12 @@ public class SqlServerContainerConfiguration : ITestContainerConfiguration
     }
 
     public string Image => string.IsNullOrWhiteSpace(_options.Image)
-        ? ContainerDefaults.Images.SqlServer
+        ? ContainerDefaultsConstants.Images.SqlServer
         : _options.Image;
 
     public int Port => _options.Port != 0
         ? _options.Port
-        : ContainerDefaults.Ports.SqlServer;
+        : ContainerDefaultsConstants.Ports.SqlServer;
 
     public string Username => _options.Username ?? "sa";
     public string Password => _options.Password ?? "Your_strong_password123!";

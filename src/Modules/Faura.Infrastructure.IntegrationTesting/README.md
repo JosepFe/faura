@@ -1,6 +1,8 @@
 ﻿# 🧪 Faura.Infrastructure.IntegrationTesting
 
-A reusable integration testing library for .NET apps, based on Testcontainers. It provides structure, test data seeding, and lifecycle control for launching databases and services inside Docker containers.
+This package is part of the **Faura.Infrastructure** framework, which provides reusable components for enterprise .NET solutions.
+
+`IntegrationTesting` focuses on enabling fast and isolated integration tests using Testcontainers and dependency overrides for database and service mocking.
 
 ---
 

@@ -1,6 +1,6 @@
-﻿namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
+﻿namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Constants;
 
-public static class ContainerDefaults
+public static class ContainerDefaultsConstants
 {
     public static class Images
     {

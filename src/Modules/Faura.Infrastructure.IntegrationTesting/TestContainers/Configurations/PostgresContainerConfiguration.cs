@@ -1,4 +1,5 @@
 ﻿using Faura.Infrastructure.IntegrationTesting.Options;
+using Faura.Infrastructure.IntegrationTesting.TestContainers.Constants;
 using Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
 
 namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Configurations;
@@ -13,12 +14,12 @@ public class PostgresContainerConfiguration : ITestContainerConfiguration
     }
 
     public string Image => string.IsNullOrWhiteSpace(_options.Image)
-        ? ContainerDefaults.Images.Postgres
+        ? ContainerDefaultsConstants.Images.Postgres
         : _options.Image;
 
     public int Port => _options.Port != 0
         ? _options.Port
-        : ContainerDefaults.Ports.Postgres;
+        : ContainerDefaultsConstants.Ports.Postgres;
 
     public string Username => _options.Username ?? "postgres";
     public string Password => _options.Password ?? "postgres";
