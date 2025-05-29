@@ -3,7 +3,6 @@
 using Faura.Infrastructure.UnitOfWork;
 using Faura.Infrastructure.UnitOfWork.Common;
 using Faura.Infrastructure.UnitOfWork.Enums;
-using Faura.Infrastructure.UnitOfWork.UnitOfWork;
 using Faura.WebAPI.Domain;
 using Faura.WebAPI.Infrastructure.Persistence;
 using YourNamespace.Data;

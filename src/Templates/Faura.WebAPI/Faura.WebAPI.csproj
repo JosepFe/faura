@@ -19,4 +19,8 @@
     <ProjectReference Include="..\..\Modules\Faura.Infrastructure.UnitOfWork\Faura.Infrastructure.UnitOfWork.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="Faura.IntegrationTest" />
+	</ItemGroup>
+
 </Project>

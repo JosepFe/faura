@@ -13,3 +13,10 @@ var app = builder.Build();
 app.ConfigureCommonFauraWebApplication();
 
 app.Run();
+
+public partial class Program
+{
+    protected Program()
+    {
+    }
+}
