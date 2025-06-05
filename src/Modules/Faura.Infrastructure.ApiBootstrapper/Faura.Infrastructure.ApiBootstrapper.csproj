@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+	
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Description>Faura GrpcBootstrapper</Description>
+		<Description>Faura ApiBootstrapper</Description>
 		<license>https://github.com/JosepFe/faura/blob/master/LICENSE</license>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>faura;grpcbootstrapper</PackageTags>
+		<PackageTags>faura;apibootstrapper</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>NET 8.0+ compatibility version</PackageReleaseNotes>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -17,9 +17,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="8.0.14" />
-		<PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
 		<PackageReference Include="Faura.Infrastructure.Common" Version="8.0.2-preview.6" />
+		<PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="8.0.14" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.3.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -32,5 +34,5 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
-
+	
 </Project>

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Faura.Infrastructure.GrpcBootstrapper.Extensions;
+namespace Faura.Infrastructure.ApiBootstrapper.Extensions;
 
 public static class HeadersPropagationExtensions
 {
