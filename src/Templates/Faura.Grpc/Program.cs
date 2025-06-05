@@ -1,7 +1,5 @@
 using Faura.Grpc.Boostrappers;
-using Faura.Grpc.Services;
 using Faura.Infrastructure.GrpcBootstrapper.Extensions;
-using Faura.Grpc.Boostrappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
