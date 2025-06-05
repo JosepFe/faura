@@ -6,7 +6,10 @@ namespace Faura.WebAPI.Domain;
 
 public class EmployeeRepository : EntityRepository<Employee>, IEmployeeRepository
 {
-    public EmployeeRepository(EmployeeDbContext dbContext, ILogger<EntityRepository<Employee>> logger, bool enableTracking = false) : base(dbContext, logger, enableTracking)
-    {
-    }
+    public EmployeeRepository(
+        EmployeeDbContext dbContext,
+        ILogger<EntityRepository<Employee>> logger,
+        bool enableTracking = false
+    )
+        : base(dbContext, logger, enableTracking) { }
 }

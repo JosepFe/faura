@@ -1,9 +1,7 @@
-using Faura.Infrastructure.ApiBoostraper.Extensions;
-using Faura.WebAPI.Boostrappers;
+using Faura.Infrastructure.ApiBootstrapper.Extensions;
+using Faura.WebAPI.Bootstrappers;
 
 var builder = WebApplication.CreateBuilder(args);
-
-var a = builder.Configuration.Sources;
 
 builder.RegisterDependencies();
 builder.RegisterApplicationDependencies();
