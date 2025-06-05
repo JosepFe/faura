@@ -39,7 +39,7 @@ jobs:
         run: |
           dotnet sonarscanner begin \
             /k:"faura" \
-            /o:"JosepFe" \
+            /o:"josepfe" \
             /d:sonar.login="${SONAR_TOKEN}" \
             /d:sonar.host.url="https://sonarcloud.io"
 
