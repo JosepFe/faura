@@ -1,4 +1,4 @@
-﻿using Faura.Infrastructure.ApiBoostraper.Middlewares.CorrelationId;
+﻿using Faura.Infrastructure.ApiBootstrapper.Middlewares.CorrelationId;
 using Microsoft.AspNetCore.Builder;
 
 namespace Faura.Infrastructure.ApiBootstrapper.Middlewares;

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.HeaderPropagation;
 using Microsoft.AspNetCore.Http;
 
-namespace Faura.Infrastructure.ApiBoostraper.Middlewares.CorrelationId;
+namespace Faura.Infrastructure.ApiBootstrapper.Middlewares.CorrelationId;
 
 public class CorrelationIdMiddleware
 {

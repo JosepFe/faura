@@ -1,6 +1,6 @@
 ﻿namespace Faura.Grpc.Bootstrappers;
 
-public static class ApplicationBoostrapper
+public static class ApplicationBootstrapper
 {
     public static WebApplicationBuilder RegisterApplicationDependencies(
         this WebApplicationBuilder builder

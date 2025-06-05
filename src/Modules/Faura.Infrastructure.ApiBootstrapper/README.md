@@ -1,3 +1,3 @@
-# Faura ApiBoostrapper
+# Faura ApiBootstrapper
 
-This is the Faura ApiBoostrapper readme.
+This is the Faura ApiBootstrapper readme.

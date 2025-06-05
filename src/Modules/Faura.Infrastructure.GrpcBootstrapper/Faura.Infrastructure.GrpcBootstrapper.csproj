@@ -4,10 +4,10 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Description>Faura GrpcBoostraper</Description>
+		<Description>Faura GrpcBootstrapper</Description>
 		<license>https://github.com/JosepFe/faura/blob/master/LICENSE</license>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>faura;grpcboostraper</PackageTags>
+		<PackageTags>faura;grpcbootstrapper</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>NET 8.0+ compatibility version</PackageReleaseNotes>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
