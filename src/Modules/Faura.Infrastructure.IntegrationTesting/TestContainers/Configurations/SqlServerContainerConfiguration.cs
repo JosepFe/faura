@@ -13,23 +13,20 @@ public class SqlServerContainerConfiguration : ITestContainerConfiguration
         _options = options;
     }
 
-    public string Image => string.IsNullOrWhiteSpace(_options.Image)
-        ? ContainerDefaultsConstants.Images.SqlServer
-        : _options.Image;
+    public string Image =>
+        string.IsNullOrWhiteSpace(_options.Image)
+            ? ContainerDefaultsConstants.Images.SqlServer
+            : _options.Image;
 
-    public int Port => _options.Port != 0
-        ? _options.Port
-        : ContainerDefaultsConstants.Ports.SqlServer;
+    public int Port =>
+        _options.Port != 0 ? _options.Port : ContainerDefaultsConstants.Ports.SqlServer;
 
     public string Username => _options.Username ?? "sa";
     public string Password => _options.Password ?? "Your_strong_password123!";
     public string Database => _options.Database ?? "TestDb";
 
-    public Dictionary<string, string> GetEnvironmentVariables() => new()
-    {
-        ["ACCEPT_EULA"] = "Y",
-        ["SA_PASSWORD"] = Password
-    };
+    public Dictionary<string, string> GetEnvironmentVariables() =>
+        new() { ["ACCEPT_EULA"] = "Y", ["SA_PASSWORD"] = Password };
 
     public string BuildConnectionString(int mappedPort) =>
         $"Server=localhost,{mappedPort};Database={Database};User Id={Username};Password={Password};TrustServerCertificate=True";

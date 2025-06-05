@@ -3,7 +3,8 @@ using DotNet.Testcontainers.Containers;
 
 namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
 
-public class TestContainerInstance<T> where T : ITestContainerConfiguration
+public class TestContainerInstance<T>
+    where T : ITestContainerConfiguration
 {
     private readonly T _config;
     private readonly IContainer _container;

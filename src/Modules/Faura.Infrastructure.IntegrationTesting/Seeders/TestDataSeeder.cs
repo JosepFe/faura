@@ -3,7 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Faura.Infrastructure.IntegrationTesting.Seeders;
 
-public abstract class TestDataSeeder<TContext> : ITestDataSeeder where TContext : DbContext
+public abstract class TestDataSeeder<TContext> : ITestDataSeeder
+    where TContext : DbContext
 {
     public async Task SeedAsync(IServiceProvider serviceProvider)
     {

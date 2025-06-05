@@ -18,10 +18,7 @@ public class MongoContainerConfiguration : ITestContainerConfiguration
             ? ContainerDefaultsConstants.Images.Mongo
             : _options.Image;
 
-    public int Port =>
-        _options.Port != 0
-            ? _options.Port
-            : ContainerDefaultsConstants.Ports.Mongo;
+    public int Port => _options.Port != 0 ? _options.Port : ContainerDefaultsConstants.Ports.Mongo;
 
     public string Username => _options.Username ?? string.Empty;
     public string Password => _options.Password ?? string.Empty;

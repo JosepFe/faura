@@ -1,8 +1,8 @@
-﻿namespace Faura.IntegrationTest.UseCases;
-
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using Faura.IntegrationTest.Configuration;
 using Faura.WebAPI.Controllers;
+
+namespace Faura.IntegrationTest.UseCases;
 
 public class WeatherForecastTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {

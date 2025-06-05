@@ -8,7 +8,10 @@ namespace Faura.IntegrationTest.Seeders;
 
 public class EmployeeTestDataSeeder : TestDataSeeder<EmployeeDbContext>
 {
-    protected override Task SeedDataAsync(EmployeeDbContext context, IServiceProvider scopedProvider)
+    protected override Task SeedDataAsync(
+        EmployeeDbContext context,
+        IServiceProvider scopedProvider
+    )
     {
         var repo = scopedProvider.GetRequiredService<IEmployeeRepository>();
 
