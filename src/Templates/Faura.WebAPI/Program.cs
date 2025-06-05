@@ -3,8 +3,6 @@ using Faura.WebAPI.Boostrappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var a = builder.Configuration.Sources;
-
 builder.RegisterDependencies();
 builder.RegisterApplicationDependencies();
 
