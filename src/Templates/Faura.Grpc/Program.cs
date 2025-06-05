@@ -1,5 +1,5 @@
-using Faura.Infrastructure.ApiBoostraper.Extensions;
-using Faura.WebAPI.Boostrappers;
+using Faura.Grpc.Boostrappers;
+using Faura.Infrastructure.GrpcBootstrapper.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +8,6 @@ builder.RegisterApplicationDependencies();
 
 var app = builder.Build();
 
-app.ConfigureCommonFauraWebApplication();
+app.ConfigureCommonFauraWebApplication(GrpcBoostrapper.RegisterGrpcServices());
 
 app.Run();
