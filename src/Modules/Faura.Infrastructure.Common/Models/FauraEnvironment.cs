@@ -24,11 +24,13 @@ public static class FauraEnvironment
 
     private static FauraDeploymentMode DetectMode()
     {
-        var mode = Environment.GetEnvironmentVariable(FauraEnvVariableName) ?? nameof(FauraDeploymentMode.Staging);
+        var mode =
+            Environment.GetEnvironmentVariable(FauraEnvVariableName)
+            ?? nameof(FauraDeploymentMode.Staging);
         return mode switch
         {
             nameof(FauraDeploymentMode.Local) => FauraDeploymentMode.Local,
-            nameof(FauraDeploymentMode.Test) => FauraDeploymentMode.Test           ,
+            nameof(FauraDeploymentMode.Test) => FauraDeploymentMode.Test,
             nameof(FauraDeploymentMode.Development) => FauraDeploymentMode.Development,
             nameof(FauraDeploymentMode.Integration) => FauraDeploymentMode.Integration,
             nameof(FauraDeploymentMode.Staging) => FauraDeploymentMode.Staging,

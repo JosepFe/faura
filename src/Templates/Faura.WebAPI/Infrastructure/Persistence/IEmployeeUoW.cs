@@ -2,6 +2,4 @@
 
 namespace Faura.WebAPI.Infrastructure.Persistence;
 
-public interface IEmployeeUoW : IUnitOfWork
-{
-}
+public interface IEmployeeUoW : IUnitOfWork { }

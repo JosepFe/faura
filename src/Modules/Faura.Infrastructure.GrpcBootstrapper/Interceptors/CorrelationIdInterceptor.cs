@@ -1,10 +1,8 @@
-﻿namespace Faura.Infrastructure.GrpcBootstrapper.Interceptors;
-
-using Grpc.Core;
+﻿using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Microsoft.AspNetCore.HeaderPropagation;
-using System;
-using System.Threading.Tasks;
+
+namespace Faura.Infrastructure.GrpcBootstrapper.Interceptors;
 
 public class CorrelationIdInterceptor : Interceptor
 {
@@ -19,7 +17,8 @@ public class CorrelationIdInterceptor : Interceptor
     public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
         TRequest request,
         ServerCallContext context,
-        UnaryServerMethod<TRequest, TResponse> continuation)
+        UnaryServerMethod<TRequest, TResponse> continuation
+    )
     {
         var correlationId = context.RequestHeaders.GetValue(HeaderKey) ?? Guid.NewGuid().ToString();
 

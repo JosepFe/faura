@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modules\Faura.Infrastructure.ApiBoostraper\Faura.Infrastructure.ApiBoostraper.csproj" />
+    <ProjectReference Include="..\..\Modules\Faura.Infrastructure.ApiBootstrapper\Faura.Infrastructure.ApiBootstrapper.csproj" />
     <ProjectReference Include="..\..\Modules\Faura.Infrastructure.JWT\Faura.Infrastructure.JWT.csproj" />
     <ProjectReference Include="..\..\Modules\Faura.Infrastructure.Logger\Faura.Infrastructure.Logger.csproj" />
     <ProjectReference Include="..\..\Modules\Faura.Infrastructure.UnitOfWork\Faura.Infrastructure.UnitOfWork.csproj" />
