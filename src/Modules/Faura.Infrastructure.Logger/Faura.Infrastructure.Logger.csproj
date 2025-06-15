@@ -16,15 +16,24 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Faura.Infrastructure.Common" Version="8.0.2-preview.6" />
 		<PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="8.0.14" />
-		<PackageReference Include="Serilog" Version="4.2.0" />
+		<PackageReference Include="Serilog" Version="4.3.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
-		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
 		<PackageReference Include="Serilog.Sinks.Graylog" Version="3.1.1" />
 		<PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
 		<PackageReference Include="Serilog.Sinks.SQLite" Version="6.0.0" />
 	</ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Faura.Infrastructure.Common\Faura.Infrastructure.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <SonarQubeSetting Include="sonar.coverage.exclusions">
+            <Value>**/**/*.cs</Value>
+        </SonarQubeSetting>
+    </ItemGroup>
 
 	<ItemGroup>
 		<None Include="README.md">

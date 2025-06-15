@@ -1,6 +1,4 @@
-﻿namespace Faura.Infrastructure.Result.Helpers;
-
-using Faura.Infrastructure.Result;
+namespace Faura.Infrastructure.Result.Helpers;
 
 public static class FauraErrorHelper
 {

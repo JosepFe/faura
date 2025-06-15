@@ -1,14 +1,14 @@
-﻿using Faura.Configurations;
+namespace Faura.Infrastructure.ApiBootstrapper.Extensions;
+
 using Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.ApiKey;
 using Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.BasicAuth;
 using Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.Bearer;
 using Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.OAuth2;
+using Faura.Infrastructure.Common.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerGen;
-
-namespace Faura.Infrastructure.ApiBootstrapper.Extensions;
 
 public static class SwaggerExtensions
 {
@@ -29,8 +29,7 @@ public static class SwaggerExtensions
 
     public static IServiceCollection SetUpSwagger(
         this IServiceCollection services,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         if (FauraEnvironment.IsProduction)
         {
@@ -49,13 +48,10 @@ public static class SwaggerExtensions
 
     private static SwaggerGenOptions AddSwaggerSecurityConfigurations(
         this SwaggerGenOptions options,
-        IConfiguration configuration
-    )
-    {
-        return options
+        IConfiguration configuration)
+        => options
             .AddOAuth2Authentication(configuration)
             .AddBearerAuthentication(configuration)
             .AddBasicAuthentication(configuration)
             .AddApiKeyAuthentication(configuration);
-    }
 }

@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	
+    
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -17,12 +17,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Faura.Infrastructure.Common" Version="8.0.2-preview.6" />
 		<PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="8.0.14" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.1" />
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.3.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.4" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.4" />
 	</ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Faura.Infrastructure.Common\Faura.Infrastructure.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <SonarQubeSetting Include="sonar.coverage.exclusions">
+            <Value>**/**/*.cs</Value>
+        </SonarQubeSetting>
+    </ItemGroup>
 
 	<ItemGroup>
 		<None Include="README.md">
@@ -34,5 +43,5 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
-	
+    
 </Project>

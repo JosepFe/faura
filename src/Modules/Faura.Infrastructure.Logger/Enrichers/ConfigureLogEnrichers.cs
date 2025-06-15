@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.Logger.Enrichers;
+namespace Faura.Infrastructure.Logger.Enrichers;
 
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -11,7 +11,7 @@ internal static class LogEnrichersExtensions
         var loggingOptions = configuration.GetSection(LoggingOptions.SectionName).Get<LoggingOptions>();
 
         return loggerConfiguration
-            .Enrich.WithProperty("ApplicationName", loggingOptions.ApplicationName)
+            .Enrich.WithProperty("ApplicationName", loggingOptions!.ApplicationName)
             .Enrich.With(new CorrelationIdEnricher());
     }
 }

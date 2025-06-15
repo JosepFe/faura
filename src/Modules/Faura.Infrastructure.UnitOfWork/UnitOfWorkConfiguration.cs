@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.UnitOfWork;
+namespace Faura.Infrastructure.UnitOfWork;
 
 using Faura.Infrastructure.UnitOfWork.Projectors;
 using Faura.Infrastructure.UnitOfWork.Repositories;

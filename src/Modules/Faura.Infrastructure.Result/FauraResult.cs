@@ -1,25 +1,24 @@
-﻿namespace Faura.Infrastructure.Result;
+namespace Faura.Infrastructure.Result;
 
-using Faura.Infrastructure.Result.Helpers;
-using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
+using Faura.Infrastructure.Result.Helpers;
+using System.Collections.Generic;
+using System;
+using System.Linq;
 
 public class FauraResult<T> : IFauraResult
 {
-    protected FauraResult() { }
+    public FauraResult(T value) => Data = value;
 
-    public FauraResult(T value)
+    protected FauraResult()
     {
-        Data = value;
     }
-
-    public static implicit operator T(FauraResult<T> result) => result.Data;
-    public static implicit operator FauraResult<T>(T value) => new FauraResult<T>(value);
 
     [JsonInclude]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public T Data { get; init; }
+    public T? Data { get; init; }
 
     [JsonIgnore]
     public Type ValueType => typeof(T);
@@ -31,75 +30,49 @@ public class FauraResult<T> : IFauraResult
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public IEnumerable<FauraError> Errors { get; protected set; } = [];
 
-    public object GetData()
-    {
-        return Data;
-    }
+    public static implicit operator T(FauraResult<T> result) => result.Data!;
 
-    public static FauraResult<T> Success(T value)
-    {
-        return new FauraResult<T>(value);
-    }
+    public static implicit operator FauraResult<T>(T value) => new(value);
 
-    public static FauraResult<T> Error(FauraError fauraError)
-    {
-        return new FauraResult<T>() { Errors = [fauraError] };
-    }
+    public static FauraResult<T> Success(T value) => new (value);
 
-    public static FauraResult<T> Error(IEnumerable<FauraError> fauraErrors = null)
+    public static FauraResult<T> Error(FauraError fauraError) => new()
     {
-        return new FauraResult<T>()
-        {
-            Errors = fauraErrors
-        };
-    }
+        Errors = [fauraError],
+    };
+
+    public static FauraResult<T> Error(IEnumerable<FauraError>? fauraErrors = null) => new()
+    {
+        Errors = fauraErrors ?? [],
+    };
+
+    public object? GetData() => Data;
 
     public void AddError(FauraError error)
-    {
-        IEnumerable<FauraError> errors;
-        if (Errors != null)
-        {
-            errors = Errors.Append(error);
-        }
-        else
-        {
-            errors = [];
-        }
-
-        Errors = errors;
-    }
+        => Errors = Errors.Append(error);
 
     public IEnumerable<FauraError> GetErrors()
-    {
-        return Errors;
-    }
+        => Errors;
 
     public bool ReturnedError(FauraError errorCode)
-    {
-        return Errors?.Any((myError) => myError.Code == $"{errorCode}") ?? false;
-    }
+        => Errors?.Any(e => e.Code == errorCode.Code) ?? false;
 
     public bool ReturnedError(IEnumerable<FauraError> errorCodes)
-    {
-        return errorCodes.Any((errorCode) => Errors?.Any((myError) => myError.Code == $"{errorCode}") ?? false);
-    }
+        => errorCodes.Any(code => Errors?.Any(e => e.Code == code.Code) ?? false);
 
     public IActionResult BuildResult(HttpStatusCode httpStatusCode = HttpStatusCode.OK)
     {
         if (IsSuccess)
         {
-            T dataAsT = Data;
-            if (dataAsT == null)
-            {
+            if (EqualityComparer<T>.Default.Equals(Data!, default!))
                 return new NoContentResult();
-            }
 
-            return new OkObjectResult(dataAsT)
+            return new OkObjectResult(Data)
             {
                 StatusCode = (int)httpStatusCode,
             };
-
         }
+
         return new ObjectResult(Errors)
         {
             StatusCode = Errors.ToHigherHttpStatusCode(),

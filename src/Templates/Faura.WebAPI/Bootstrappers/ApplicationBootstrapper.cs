@@ -1,17 +1,16 @@
-﻿using Faura.Infrastructure.UnitOfWork;
+namespace Faura.WebAPI.Bootstrappers;
+
+using Faura.Infrastructure.UnitOfWork;
 using Faura.Infrastructure.UnitOfWork.Common;
 using Faura.Infrastructure.UnitOfWork.Enums;
-using Faura.WebAPI.Domain;
+using Faura.WebAPI.Domain.Repositories;
 using Faura.WebAPI.Infrastructure.Persistence;
-using YourNamespace.Data;
-
-namespace Faura.WebAPI.Bootstrappers;
+using Faura.WebAPI.Infrastructure.Repositories;
 
 public static class ApplicationBootstrapper
 {
     public static WebApplicationBuilder RegisterApplicationDependencies(
-        this WebApplicationBuilder builder
-    )
+        this WebApplicationBuilder builder)
     {
         builder.Services.SetupDatabase(builder.Configuration);
 
@@ -23,12 +22,9 @@ public static class ApplicationBootstrapper
     /// <summary>
     /// Setup here your database connections.
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="configuration"></param>
     private static void SetupDatabase(
         this IServiceCollection services,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         services.SetupUnitOfWork();
         services
@@ -36,8 +32,7 @@ public static class ApplicationBootstrapper
                 configuration,
                 "Employee",
                 DatabaseType.PostgreSQL,
-                ServiceLifetime.Scoped
-            )
+                ServiceLifetime.Scoped)
             .ConfigureAwait(false);
     }
 }

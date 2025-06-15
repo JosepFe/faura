@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
+namespace Faura.Infrastructure.ApiBootstrapper.Extensions;
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
-namespace Faura.Infrastructure.ApiBootstrapper.Extensions;
 
 public static class HeadersPropagationExtensions
 {
@@ -10,13 +10,12 @@ public static class HeadersPropagationExtensions
 
     public static void AddHeadersPropagation(
         this WebApplicationBuilder builder,
-        IConfiguration config
-    ) => builder.Services.AddHeadersPropagation(config);
+        IConfiguration config)
+        => builder.Services.AddHeadersPropagation(config);
 
     public static IServiceCollection AddHeadersPropagation(
         this IServiceCollection services,
-        IConfiguration config
-    )
+        IConfiguration config)
     {
         services.AddHeaderPropagation(options =>
         {

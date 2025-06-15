@@ -1,17 +1,15 @@
-﻿using Faura.Infrastructure.IntegrationTesting.Options;
+namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Configurations;
+
+using Faura.Infrastructure.IntegrationTesting.Options;
 using Faura.Infrastructure.IntegrationTesting.TestContainers.Constants;
 using Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
-
-namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Configurations;
 
 public class RedisContainerConfiguration : ITestContainerConfiguration
 {
     private readonly ContainerOptions _options;
 
     public RedisContainerConfiguration(ContainerOptions options)
-    {
-        _options = options;
-    }
+        => _options = options;
 
     public string Image =>
         string.IsNullOrWhiteSpace(_options.Image)
@@ -24,7 +22,7 @@ public class RedisContainerConfiguration : ITestContainerConfiguration
     public string Password => _options.Password ?? string.Empty;
     public string Database => _options.Database ?? string.Empty;
 
-    public Dictionary<string, string> GetEnvironmentVariables() => new();
+    public Dictionary<string, string> GetEnvironmentVariables() => [];
 
     public string BuildConnectionString(int mappedPort) => $"localhost:{mappedPort}";
 }

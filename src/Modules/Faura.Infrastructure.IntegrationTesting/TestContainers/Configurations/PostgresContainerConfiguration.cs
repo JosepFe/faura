@@ -1,17 +1,15 @@
-﻿using Faura.Infrastructure.IntegrationTesting.Options;
+namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Configurations;
+
+using Faura.Infrastructure.IntegrationTesting.Options;
 using Faura.Infrastructure.IntegrationTesting.TestContainers.Constants;
 using Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
-
-namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Configurations;
 
 public class PostgresContainerConfiguration : ITestContainerConfiguration
 {
     private readonly ContainerOptions _options;
 
     public PostgresContainerConfiguration(ContainerOptions options)
-    {
-        _options = options;
-    }
+        => _options = options;
 
     public string Image =>
         string.IsNullOrWhiteSpace(_options.Image)

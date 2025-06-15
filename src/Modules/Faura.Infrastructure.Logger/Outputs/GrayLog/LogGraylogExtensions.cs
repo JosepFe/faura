@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.Logger.Outputs.GrayLog;
+namespace Faura.Infrastructure.Logger.Outputs.GrayLog;
 
 using Serilog.Sinks.Graylog;
 using Serilog;
@@ -8,7 +8,7 @@ using Serilog.Sinks.Graylog.Core.Transport;
 
 public static class LogGrayLogExtensions
 {
-    public static LoggerConfiguration ConfigureLogGraylog(this LoggerConfiguration loggerConfiguration, IConfiguration configuration, List<ILogEventEnricher> logEnrichers = null)
+    public static LoggerConfiguration ConfigureLogGraylog(this LoggerConfiguration loggerConfiguration, IConfiguration configuration, List<ILogEventEnricher>? logEnrichers = null)
     {
         var graylogOptions = configuration.GetSection(LogGraylogOptions.SectionName).Get<LogGraylogOptions>();
 
@@ -17,11 +17,11 @@ public static class LogGrayLogExtensions
         var graylogSinkConfig = new GraylogSinkOptions
         {
             HostnameOrAddress = graylogOptions.GrayLogHost,
-            TransportType = GetGraylogTransportTypeFromString(graylogOptions.GrayLogProtocol),
-            HostnameOverride = graylogOptions.GrayLogHost,
+            TransportType = GetGraylogTransportTypeFromString(graylogOptions.GrayLogProtocol!),
+            HostnameOverride = graylogOptions.GrayLogHost!,
             Port = graylogOptions.GrayLogPort,
             MaxMessageSizeInUdp = graylogOptions.MaxUdpMessageSize,
-            Facility = "FauraApp"
+            Facility = "FauraApp",
         };
 
         return loggerConfiguration

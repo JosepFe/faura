@@ -1,12 +1,12 @@
-﻿using Faura.Infrastructure.IntegrationTesting.Constants;
+namespace Faura.Infrastructure.IntegrationTesting.Factory;
+
+using Faura.Infrastructure.IntegrationTesting.Constants;
 using Faura.Infrastructure.IntegrationTesting.Seeders;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-
-namespace Faura.Infrastructure.IntegrationTesting.Factory;
 
 /// <summary>
 /// Base factory for integration tests with container setup and service customization.
@@ -16,23 +16,18 @@ public abstract class BaseWebApplicationFactory<TEntryPoint>
         IAsyncLifetime
     where TEntryPoint : class
 {
-    /// <summary>
-    /// Final configuration used during the test run.
-    /// </summary>
-    protected IConfiguration? Configuration;
+    protected IConfiguration? Configuration { get; set; }
 
     public async Task InitializeAsync()
     {
         Environment.SetEnvironmentVariable(
             "ASPNETCORE_ENVIRONMENT",
-            IntegrationTestConstants.Environment
-        );
+            IntegrationTestConstants.Environment);
 
         var testProjectPath = Directory.GetCurrentDirectory();
         var settingsFile = Path.Combine(
             testProjectPath,
-            $"appsettings.{IntegrationTestConstants.Environment}.json"
-        );
+            $"appsettings.{IntegrationTestConstants.Environment}.json");
 
         var configBuilder = new ConfigurationBuilder()
             .AddJsonFile(settingsFile, optional: false)
@@ -44,7 +39,7 @@ public abstract class BaseWebApplicationFactory<TEntryPoint>
         Configuration = await ConfigureTestContainersAsync(baseConfig);
     }
 
-    public virtual Task DisposeAsync() => Task.CompletedTask;
+    public new virtual Task DisposeAsync() => Task.CompletedTask;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -55,8 +50,7 @@ public abstract class BaseWebApplicationFactory<TEntryPoint>
             {
                 config.Sources.Clear();
                 config.AddConfiguration(Configuration!);
-            }
-        );
+            });
 
         builder.ConfigureServices(services =>
         {
@@ -79,26 +73,27 @@ public abstract class BaseWebApplicationFactory<TEntryPoint>
     /// Starts containers and returns updated configuration (e.g., with connection strings).
     /// </summary>
     protected virtual Task<IConfiguration> ConfigureTestContainersAsync(
-        IConfiguration configuration
-    ) => Task.FromResult(configuration);
+        IConfiguration configuration) => Task.FromResult(configuration);
 
     /// <summary>
     /// Registers test-specific or mocked services.
     /// </summary>
     protected virtual void ConfigureTestServices(
         IServiceCollection services,
-        IConfiguration configuration
-    ) { }
+        IConfiguration configuration)
+    {
+    }
 
     /// <summary>
     /// Registers database context and ensures schema is created.
     /// </summary>
     protected virtual void ConfigureTestDatabase(
         IServiceCollection services,
-        IConfiguration configuration
-    ) { }
+        IConfiguration configuration)
+    {
+    }
 
-    private async Task RunSeedersAsync(IServiceProvider serviceProvider)
+    private static async Task RunSeedersAsync(IServiceProvider serviceProvider)
     {
         foreach (var seeder in serviceProvider.GetServices<ITestDataSeeder>())
         {

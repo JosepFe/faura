@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.Logger.Outputs.SqLiteDb;
+namespace Faura.Infrastructure.Logger.Outputs.SqLiteDb;
 
 using Faura.Infrastructure.Common.Utils;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +15,7 @@ public static class LogSqLiteDbExtensions
         if (!sqLiteDbOptions.Enable) return loggerConfiguration;
 
         return loggerConfiguration
-            .WriteTo.SQLite(GetSqliteDbLogFilePath(sqLiteDbOptions.LogSqLiteFile, DefaultLogSqLiteFileName));
+            .WriteTo.SQLite(GetSqliteDbLogFilePath(sqLiteDbOptions.LogSqLiteFile!, DefaultLogSqLiteFileName));
     }
 
     internal static string GetSqliteDbLogFilePath(string file, string defaultFileName)
