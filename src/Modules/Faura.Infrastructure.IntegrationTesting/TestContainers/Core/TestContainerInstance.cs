@@ -1,15 +1,13 @@
-﻿using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Containers;
-
 namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
+
+using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Containers;
 
 public class TestContainerInstance<T>
     where T : ITestContainerConfiguration
 {
     private readonly T _config;
     private readonly IContainer _container;
-
-    public string ConnectionString { get; private set; } = string.Empty;
 
     public TestContainerInstance(T config)
     {
@@ -28,6 +26,8 @@ public class TestContainerInstance<T>
 
         _container = builder.Build();
     }
+
+    public string ConnectionString { get; private set; } = string.Empty;
 
     public async Task StartAsync()
     {

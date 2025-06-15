@@ -1,17 +1,16 @@
-﻿using System.Net.Http.Json;
+namespace Faura.IntegrationTest.UseCases;
+
+using System.Net.Http.Json;
 using Faura.IntegrationTest.Configuration;
 using Faura.WebAPI.Controllers;
-
-namespace Faura.IntegrationTest.UseCases;
+using Xunit;
 
 public class WeatherForecastTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private readonly HttpClient _client;
 
     public WeatherForecastTests(CustomWebApplicationFactory<Program> factory)
-    {
-        _client = factory.CreateClient();
-    }
+        => _client = factory.CreateClient();
 
     [Fact]
     public async Task Should_Return_WeatherForecast()

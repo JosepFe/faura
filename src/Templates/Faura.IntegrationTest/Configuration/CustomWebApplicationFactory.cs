@@ -1,4 +1,6 @@
-﻿using DotNet.Testcontainers.Containers;
+namespace Faura.IntegrationTest.Configuration;
+
+using DotNet.Testcontainers.Containers;
 using Faura.Infrastructure.IntegrationTesting.Factory;
 using Faura.Infrastructure.IntegrationTesting.Options;
 using Faura.Infrastructure.IntegrationTesting.Seeders;
@@ -7,18 +9,18 @@ using Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
 using Faura.Infrastructure.UnitOfWork.Common;
 using Faura.Infrastructure.UnitOfWork.Enums;
 using Faura.IntegrationTest.Seeders;
+using Faura.WebAPI.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using YourNamespace.Data;
-
-namespace Faura.IntegrationTest.Configuration;
 
 public class CustomWebApplicationFactory<TEntryPoint> : BaseWebApplicationFactory<TEntryPoint>
     where TEntryPoint : class
 {
-    private IContainer? _postgresContainer;
+    private readonly IContainer? _postgresContainer;
+
+    public CustomWebApplicationFactory(IContainer? postgresContainer) => _postgresContainer = postgresContainer;
 
     public override async Task DisposeAsync()
     {
@@ -26,11 +28,12 @@ public class CustomWebApplicationFactory<TEntryPoint> : BaseWebApplicationFactor
         {
             await _postgresContainer.StopAsync();
         }
+
+        await base.DisposeAsync();
     }
 
     protected override async Task<IConfiguration> ConfigureTestContainersAsync(
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         var containerOptions = configuration.GetSection("Containers").Get<TestContainerOptions>();
         var pgOptions = containerOptions!.Postgres;
@@ -46,29 +49,23 @@ public class CustomWebApplicationFactory<TEntryPoint> : BaseWebApplicationFactor
                 new Dictionary<string, string?>
                 {
                     ["ConnectionStrings:Employee"] = containerInstance.ConnectionString,
-                }
-            )
+                })
             .Build();
     }
 
     protected override void ConfigureTestServices(
         IServiceCollection services,
-        IConfiguration configuration
-    )
-    {
-        services.AddScoped<ITestDataSeeder, EmployeeTestDataSeeder>();
-    }
+        IConfiguration configuration)
+        => services.AddScoped<ITestDataSeeder, EmployeeTestDataSeeder>();
 
     protected override void ConfigureTestDatabase(
         IServiceCollection services,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         services.RemoveAll(typeof(DbContextOptions<EmployeeDbContext>));
         services.ConfigureDatabase<EmployeeDbContext>(
-            configuration.GetConnectionString("Employee")!,
+            configuration.GetConnectionString("Employee") !,
             DatabaseType.PostgreSQL,
-            ServiceLifetime.Scoped
-        );
+            ServiceLifetime.Scoped);
     }
 }

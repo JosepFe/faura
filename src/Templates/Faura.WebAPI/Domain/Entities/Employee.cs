@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
 namespace Faura.WebAPI.Domain.Entities;
+
+using System.ComponentModel.DataAnnotations.Schema;
 
 [Table("employee")]
 public class Employee

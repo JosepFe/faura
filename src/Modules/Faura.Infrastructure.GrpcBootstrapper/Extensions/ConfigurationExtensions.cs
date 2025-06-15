@@ -1,7 +1,7 @@
-﻿using Faura.Configurations;
-using Microsoft.Extensions.Configuration;
-
 namespace Faura.Infrastructure.GrpcBootstrapper.Extensions;
+
+using Faura.Infrastructure.Common.Models;
+using Microsoft.Extensions.Configuration;
 
 public static class ConfigurationExtensions
 {

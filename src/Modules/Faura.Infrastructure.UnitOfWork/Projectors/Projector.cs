@@ -1,16 +1,14 @@
 namespace Faura.Infrastructure.UnitOfWork.Projectors;
 
-using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
-public class Projector<TEntity> : IProjector<TEntity> where TEntity : class
+public class Projector<TEntity> : IProjector<TEntity>
+    where TEntity : class
 {
     private readonly DbContext _context;
 
     public Projector(DbContext context)
-    {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-    }
+        => _context = context ?? throw new ArgumentNullException(nameof(context));
 
     public async Task<IEnumerable<TResult>> GetProjectionAsync<TResult>(
         Func<IQueryable<TEntity>, IQueryable<TResult>> projection,

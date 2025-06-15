@@ -1,6 +1,6 @@
-﻿using Microsoft.OpenApi.Models;
-
 namespace Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.ApiKey;
+
+using Microsoft.OpenApi.Models;
 
 public class ApiKeyOptions
 {

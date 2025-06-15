@@ -16,9 +16,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Faura.Infrastructure.Common" Version="8.0.2-preview.6" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.14" />
 	</ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\Faura.Infrastructure.Common\Faura.Infrastructure.Common.csproj" />
+    </ItemGroup>
 
 	<ItemGroup>
 		<None Include="README.md">

@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.Logger.Enrichers;
+namespace Faura.Infrastructure.Logger.Enrichers;
 
 using Microsoft.AspNetCore.HeaderPropagation;
 using Serilog.Core;
@@ -10,7 +10,10 @@ public class CorrelationIdEnricher : ILogEventEnricher
     private const string HeaderKey = "x-correlation-id";
     private readonly HeaderPropagationValues _headerPropagationValues;
 
-    public CorrelationIdEnricher() : this(new HeaderPropagationValues()) { }
+    public CorrelationIdEnricher()
+        : this(new HeaderPropagationValues())
+    {
+    }
 
     public CorrelationIdEnricher(HeaderPropagationValues headerPropagationValues) => _headerPropagationValues = headerPropagationValues;
 

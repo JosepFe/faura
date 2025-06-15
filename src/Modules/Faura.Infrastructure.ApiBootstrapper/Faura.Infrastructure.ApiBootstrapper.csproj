@@ -17,11 +17,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Faura.Infrastructure.Common" Version="8.0.2-preview.6" />
 		<PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="8.0.14" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.1" />
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.3.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.4" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.4" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -33,6 +32,10 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Faura.Infrastructure.Common\Faura.Infrastructure.Common.csproj" />
 	</ItemGroup>
 	
 </Project>

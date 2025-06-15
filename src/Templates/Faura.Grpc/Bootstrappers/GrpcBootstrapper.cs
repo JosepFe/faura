@@ -1,8 +1,8 @@
-﻿using Faura.Grpc.Services;
+namespace Faura.Grpc.Bootstrappers;
+
+using Faura.Grpc.Services;
 using Faura.Infrastructure.GrpcBootstrapper.Extensions;
 using Faura.Infrastructure.Logger;
-
-namespace Faura.Grpc.Bootstrappers;
 
 public static class GrpcBootstrapper
 {
@@ -16,10 +16,5 @@ public static class GrpcBootstrapper
     }
 
     public static Action<IEndpointRouteBuilder> RegisterGrpcServices()
-    {
-        return endpoints =>
-        {
-            endpoints.MapGrpcService<GreeterService>();
-        };
-    }
+        => endpoints => endpoints.MapGrpcService<GreeterService>();
 }

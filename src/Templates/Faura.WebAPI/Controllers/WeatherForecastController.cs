@@ -1,82 +1,37 @@
+namespace Faura.WebAPI.Controllers;
+
+using Faura.Infrastructure.Logger.Extensions;
 using Faura.WebAPI.Domain;
 using Faura.WebAPI.Domain.Entities;
 using Faura.WebAPI.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-namespace Faura.WebAPI.Controllers;
+using Microsoft.Extensions.Logging;
 
 [ApiController]
 [Route("[controller]")]
-public class WeatherForecastController : ControllerBase
+public class WeatherForecastController(
+    ILogger<WeatherForecastController> logger,
+    IEmployeeRepository employeeRepository,
+    IEmployeeUoW uoW)
+    : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing",
-        "Bracing",
-        "Chilly",
-        "Cool",
-        "Mild",
-        "Warm",
-        "Balmy",
-        "Hot",
-        "Sweltering",
-        "Scorching",
-    };
-
-    private readonly ILogger<WeatherForecastController> _logger;
-    private readonly IEmployeeRepository _employeeRepository;
-    private readonly IEmployeeUoW _uoW;
-
-    public WeatherForecastController(
-        ILogger<WeatherForecastController> logger,
-        IEmployeeRepository employeeRepository,
-        IEmployeeUoW uoW
-    )
-    {
-        _logger = logger;
-        _employeeRepository = employeeRepository;
-        _uoW = uoW;
-    }
-
     [HttpGet(Name = "GetWeatherForecast")]
-    public async Task<IEnumerable<WeatherForecast>> Get()
+    public async Task<IActionResult> Get()
     {
-        var res = await _employeeRepository.GetAsync();
+        logger.LogFauraInformation("Starting Get");
 
-        var transaction = await _uoW.GetDbTransaction();
+        await employeeRepository.GetAsync();
 
-        var res2 = await _employeeRepository.CreateAsync(
-            new Employee("Josep", "Ferrandis", "algo@example.com"),
-            false,
-            false
-        );
-        var res3 = await _employeeRepository.CreateAsync(
-            new Employee("Josep", "Ferrandis", "algo@example.com"),
-            false,
-            false
-        );
+        var transaction = await uoW.GetDbTransaction();
 
-        // send event 1
-        // send event 2
+        await employeeRepository.CreateAsync(
+            new Employee("Josep", "Ferrandis", "algo@example.com"));
 
-        await _uoW.CommitTransaction(transaction);
+        await employeeRepository.CreateAsync(
+            new Employee("Josep", "Ferrandis", "algo@example.com"));
 
-        return Enumerable
-            .Range(1, 5)
-            .Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)],
-            })
-            .ToArray();
-    }
+        await uoW.CommitTransaction(transaction);
 
-    [HttpGet("Test")]
-    [Authorize]
-    public string GetTst()
-    {
-        return "Hola";
+        return Ok();
     }
 }

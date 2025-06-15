@@ -1,29 +1,29 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.Repositories;
+namespace Faura.Infrastructure.UnitOfWork.Repositories;
 
 using Faura.Infrastructure.UnitOfWork.Enums;
 using Faura.Infrastructure.UnitOfWork.Exceptions;
 using Faura.Infrastructure.UnitOfWork.Models;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 /// <summary>
-/// Generic repository implementation for data access operations
+/// Generic repository implementation for data access operations.
 /// </summary>
-/// <typeparam name="TEntity">The entity type this repository works with</typeparam>
-public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : class
+/// <typeparam name="TEntity">The entity type this repository works with.</typeparam>
+public class EntityRepository<TEntity> : IEntityRepository<TEntity>
+    where TEntity : class
 {
     private readonly DbContext _dbContext;
     private readonly ILogger<EntityRepository<TEntity>> _logger;
     private readonly bool _enableTracking;
 
     /// <summary>
-    /// Creates a new instance of the repository
+    /// Initializes a new instance of the <see cref="EntityRepository{TEntity}"/> class.
     /// </summary>
-    /// <param name="dbContext">Database context to use for operations</param>
-    /// <param name="logger">Logger for capturing operation information</param>
-    /// <param name="enableTracking">Whether to enable entity tracking</param>
+    /// <param name="dbContext">Database context to use for operations.</param>
+    /// <param name="logger">Logger for capturing operation information.</param>
+    /// <param name="enableTracking">Whether to enable entity tracking.</param>
     public EntityRepository(
         DbContext dbContext,
         ILogger<EntityRepository<TEntity>> logger,
@@ -37,7 +37,7 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
     }
 
     /// <summary>
-    /// Base queryable for this entity type
+    /// Gets base queryable for this entity type.
     /// </summary>
     private IQueryable<TEntity> BaseQuery => GetBaseQuery();
 
@@ -212,35 +212,15 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
     }
 
     /// <inheritdoc />
-    public Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate = null)
-    {
-        try
-        {
-            return ApplyPredicate(predicate).FirstOrDefaultAsync();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error retrieving first entity of type {EntityType}", typeof(TEntity).Name);
-            throw new RepositoryQueryException($"Failed to retrieve first entity: {ex.Message}", ex);
-        }
-    }
+    public Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>>? predicate = null)
+        => ApplyPredicate(predicate).FirstOrDefaultAsync();
 
     /// <inheritdoc />
-    public Task<TEntity> GetLastOrDefaultAsync(Expression<Func<TEntity, bool>> predicate = null)
-    {
-        try
-        {
-            return ApplyPredicate(predicate).LastOrDefaultAsync();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error retrieving last entity of type {EntityType}", typeof(TEntity).Name);
-            throw new RepositoryQueryException($"Failed to retrieve last entity: {ex.Message}", ex);
-        }
-    }
+    public Task<TEntity?> GetLastOrDefaultAsync(Expression<Func<TEntity, bool>>? predicate = null)
+        => ApplyPredicate(predicate).LastOrDefaultAsync();
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate = null)
+    public async Task<IReadOnlyList<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? predicate = null)
     {
         try
         {
@@ -274,7 +254,7 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
     /// <inheritdoc />
     public async Task<IReadOnlyList<TEntity>> GetWithIncludesAsync(
         IEnumerable<string> includes,
-        Expression<Func<TEntity, bool>> predicate = null)
+        Expression<Func<TEntity, bool>>? predicate = null)
     {
         try
         {
@@ -292,7 +272,7 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
     public async Task<PagedResult<TEntity>> GetPagedAsync(
         int page,
         int pageSize,
-        Expression<Func<TEntity, bool>> predicate = null)
+        Expression<Func<TEntity, bool>>? predicate = null)
     {
         try
         {
@@ -310,7 +290,7 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
         int page,
         int pageSize,
         IEnumerable<string> includes,
-        Expression<Func<TEntity, bool>> predicate = null)
+        Expression<Func<TEntity, bool>>? predicate = null)
     {
         try
         {
@@ -345,7 +325,7 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
     }
 
     /// <inheritdoc />
-    public Task<long> CountAsync(Expression<Func<TEntity, bool>> predicate = null)
+    public Task<long> CountAsync(Expression<Func<TEntity, bool>>? predicate = null)
     {
         try
         {
@@ -360,12 +340,23 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
         }
     }
 
+    private static IQueryable<TEntity> ApplySorting<TKey>(
+    IQueryable<TEntity> query,
+    Expression<Func<TEntity, TKey>> orderBy,
+    SortDirection sortDirection)
+    => sortDirection == SortDirection.Ascending
+        ? query.OrderBy(orderBy)
+        : query.OrderByDescending(orderBy);
+
+    private static IQueryable<TEntity> ApplyIncludes(
+        IQueryable<TEntity> query,
+        IEnumerable<string> includes)
+        => includes.Aggregate(query, (current, includePath) => current.Include(includePath));
+
     private IQueryable<TEntity> GetBaseQuery()
-    {
-        return _enableTracking
+        => _enableTracking
             ? _dbContext.Set<TEntity>()
             : _dbContext.Set<TEntity>().AsNoTracking();
-    }
 
     private void ConfigureContextBehavior()
     {
@@ -376,27 +367,8 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
             : QueryTrackingBehavior.NoTracking;
     }
 
-    private IQueryable<TEntity> ApplyPredicate(Expression<Func<TEntity, bool>> predicate)
-    {
-        return predicate != null ? BaseQuery.Where(predicate) : BaseQuery;
-    }
-
-    private IQueryable<TEntity> ApplySorting<TKey>(
-        IQueryable<TEntity> query,
-        Expression<Func<TEntity, TKey>> orderBy,
-        SortDirection sortDirection)
-    {
-        return sortDirection == SortDirection.Ascending
-            ? query.OrderBy(orderBy)
-            : query.OrderByDescending(orderBy);
-    }
-
-    private IQueryable<TEntity> ApplyIncludes(
-        IQueryable<TEntity> query,
-        IEnumerable<string> includes)
-    {
-        return includes.Aggregate(query, (current, includePath) => current.Include(includePath));
-    }
+    private IQueryable<TEntity> ApplyPredicate(Expression<Func<TEntity, bool>>? predicate)
+        => predicate != null ? BaseQuery.Where(predicate) : BaseQuery;
 
     private async Task<PagedResult<TEntity>> CreatePagedResultAsync(
         int page,
@@ -411,7 +383,7 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
         {
             CurrentPage = page,
             PageSize = pageSize,
-            TotalCount = await query.CountAsync()
+            TotalCount = await query.CountAsync(),
         };
 
         var skip = (page - 1) * pageSize;
@@ -421,16 +393,5 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
         result.HasNextPage = page < result.TotalPages;
 
         return result;
-    }
-
-    private (string Query, object[] ParameterValues) BuildStoredProcedureCommand(
-        string procedureName,
-        SqlParameter[] parameters)
-    {
-        var paramList = parameters.ToList();
-        var paramPlaceholders = string.Join(", ", paramList.Select((p, i) => $"@p{i}"));
-        var paramValues = paramList.Select(p => p.Value).ToArray();
-
-        return ($"EXEC {procedureName} {paramPlaceholders}", paramValues);
     }
 }

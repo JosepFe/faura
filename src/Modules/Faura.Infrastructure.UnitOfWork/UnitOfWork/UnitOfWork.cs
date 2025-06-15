@@ -1,18 +1,17 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.UnitOfWork;
+namespace Faura.Infrastructure.UnitOfWork.UnitOfWork;
 
 using System.Data;
 using Faura.Infrastructure.UnitOfWork.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-public class UnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
+public class UnitOfWork<TContext> : IUnitOfWork
+    where TContext : DbContext
 {
     private const int DefaultSecondsTimeout = 30;
 
     protected UnitOfWork(TContext context)
-    {
-        Context = context ?? throw new NullContextException(nameof(context));
-    }
+        => Context = context ?? throw new NullContextException(nameof(context));
 
     private TContext Context { get; }
 
@@ -24,16 +23,11 @@ public class UnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
         return dbContextTransaction.GetDbTransaction();
     }
 
-    public Task SaveChanges()
-    {
-        //Auditable entities
-        return Context.SaveChangesAsync();
-    }
+    public Task SaveChanges() =>
+        Context.SaveChangesAsync();
 
     public IExecutionStrategy CreateExecutionStrategy()
-    {
-        return Context.Database.CreateExecutionStrategy();
-    }
+        => Context.Database.CreateExecutionStrategy();
 
     public async Task CommitTransaction(IDbTransaction transaction)
     {
@@ -46,7 +40,7 @@ public class UnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
 
             transaction.Commit();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             transaction.Rollback();
             throw;

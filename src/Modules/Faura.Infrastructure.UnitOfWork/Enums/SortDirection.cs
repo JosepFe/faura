@@ -1,7 +1,7 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.Enums;
+namespace Faura.Infrastructure.UnitOfWork.Enums;
 
 /// <summary>
-/// Direction for sorting operations
+/// Direction for sorting operations.
 /// </summary>
 public enum SortDirection
 {
@@ -13,5 +13,5 @@ public enum SortDirection
     /// <summary>
     /// Sort in descending order
     /// </summary>
-    Descending
+    Descending,
 }

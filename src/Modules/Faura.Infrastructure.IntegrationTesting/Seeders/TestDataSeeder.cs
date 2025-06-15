@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Faura.Infrastructure.IntegrationTesting.Seeders;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 public abstract class TestDataSeeder<TContext> : ITestDataSeeder
     where TContext : DbContext

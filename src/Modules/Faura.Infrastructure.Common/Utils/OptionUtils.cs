@@ -1,16 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
+namespace Faura.Infrastructure.Common.Utils;
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-
-namespace Faura.Infrastructure.Common.Utils;
 
 public static class OptionUtils
 {
     public static T? GetTypedOptions<T>(
         this IServiceCollection services,
         IConfiguration configuration,
-        string sectionName
-    )
+        string sectionName)
         where T : class, new()
     {
         if (configuration == null || string.IsNullOrWhiteSpace(sectionName))

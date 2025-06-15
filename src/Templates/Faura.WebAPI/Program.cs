@@ -10,7 +10,7 @@ var app = builder.Build();
 
 app.ConfigureCommonFauraWebApplication();
 
-app.Run();
+await app.RunAsync();
 
 public partial class Program
 {

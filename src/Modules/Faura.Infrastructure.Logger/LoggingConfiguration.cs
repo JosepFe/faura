@@ -13,6 +13,7 @@ using Faura.Infrastructure.Logger.Enrichers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Faura.Infrastructure.Logger.Options;
+using Faura.Infrastructure.Logger.Outputs.Seq;
 
 public static class LoggingConfiguration
 {

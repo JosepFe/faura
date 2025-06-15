@@ -1,7 +1,7 @@
-﻿using Faura.Infrastructure.ApiBootstrapper.Middlewares;
-using Microsoft.AspNetCore.Builder;
-
 namespace Faura.Infrastructure.ApiBootstrapper.Extensions;
+
+using Faura.Infrastructure.ApiBootstrapper.Middlewares;
+using Microsoft.AspNetCore.Builder;
 
 public static class WebApplicationExtensions
 {

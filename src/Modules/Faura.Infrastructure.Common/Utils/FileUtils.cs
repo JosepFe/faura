@@ -1,10 +1,10 @@
-﻿using System.Reflection;
-
 namespace Faura.Infrastructure.Common.Utils;
+
+using System.Reflection;
 
 public static class FileUtils
 {
-    private static string? AapplicationDirectory;
+    private static string? applicationDirectory;
 
     public static List<string> SearchFiles(string pattern, string baseDirectory = "")
     {
@@ -27,16 +27,11 @@ public static class FileUtils
     }
 
     public static string? GetApplicationDirectory()
-    {
-        return AapplicationDirectory ??= Path.GetDirectoryName(
-            Assembly.GetEntryAssembly()?.Location
-        );
-    }
+        => applicationDirectory ??= Path.GetDirectoryName(
+            Assembly.GetEntryAssembly()?.Location);
 
     private static string ResolveDirectory(string baseDirectory)
-    {
-        return !string.IsNullOrWhiteSpace(baseDirectory) && Directory.Exists(baseDirectory)
+        => !string.IsNullOrWhiteSpace(baseDirectory) && Directory.Exists(baseDirectory)
             ? baseDirectory
             : Directory.GetCurrentDirectory();
-    }
 }

@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.Common;
+namespace Faura.Infrastructure.UnitOfWork.Common;
 
 using Faura.Infrastructure.UnitOfWork.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +17,8 @@ public static class DatabaseConfigurator
         this IServiceCollection services,
         string connectionString,
         DatabaseType databaseType,
-        ServiceLifetime serviceLifetime = ServiceLifetime.Scoped) where TContext : DbContext
+        ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
+        where TContext : DbContext
     {
         if (string.IsNullOrWhiteSpace(connectionString))
             throw new ArgumentException("Connection string cannot be null or empty.", nameof(connectionString));
@@ -31,7 +32,8 @@ public static class DatabaseConfigurator
         string connectionStringName,
         DatabaseType databaseType,
         ServiceLifetime serviceLifetime = ServiceLifetime.Scoped,
-        bool runMigrations = false) where TContext : DbContext
+        bool runMigrations = false)
+        where TContext : DbContext
     {
         var connectionString = configuration.GetConnectionString(connectionStringName)
             ?? throw new ArgumentException($"Connection string '{connectionStringName}' not found or is empty.");
@@ -58,7 +60,8 @@ public static class DatabaseConfigurator
                 break;
 
             case DatabaseType.MySql:
-                options.UseMySql(ServerVersion.AutoDetect(connectionString),
+                options.UseMySql(
+                    ServerVersion.AutoDetect(connectionString),
                     mysqlOptions => mysqlOptions.EnableRetryOnFailure(MaxRetryCount, TimeSpan.FromSeconds(MaxRetryDelay), null));
                 break;
 
@@ -75,7 +78,8 @@ public static class DatabaseConfigurator
         }
     }
 
-    private static async Task ApplyMigrations<TContext>(IServiceCollection services) where TContext : DbContext
+    private static async Task ApplyMigrations<TContext>(IServiceCollection services)
+        where TContext : DbContext
     {
         using var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetService<ILogger>();
@@ -83,7 +87,8 @@ public static class DatabaseConfigurator
 
         if (context == null)
         {
-            logger?.LogError($"Unable to resolve {typeof(TContext).FullName}. Database migration will not be performed.");
+            string message = $"Unable to resolve {typeof(TContext).FullName}. Database migration will not be performed.";
+            logger?.LogError(message);
             return;
         }
 
@@ -93,8 +98,10 @@ public static class DatabaseConfigurator
         }
         catch (Exception ex)
         {
-            logger?.LogError(ex, "An error occurred while migrating the database.");
-            throw;
+            string contextName = typeof(TContext).FullName ?? "UnknownContext";
+            string errorMessage = $"An error occurred while migrating the database for context {contextName}. See inner exception for details.";
+            logger?.LogError(ex, errorMessage);
+            throw new InvalidOperationException(errorMessage, ex);
         }
     }
 }

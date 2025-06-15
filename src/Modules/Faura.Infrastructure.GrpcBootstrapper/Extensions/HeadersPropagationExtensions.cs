@@ -1,27 +1,19 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Faura.Infrastructure.GrpcBootstrapper.Extensions;
+
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 public static class HeadersPropagationExtensions
 {
     public const string CorrelationIdHeaderKey = "x-correlation-id";
 
     public static void AddHeadersPropagation(
-        this WebApplicationBuilder builder,
-        IConfiguration config
-    ) => builder.Services.AddHeadersPropagation(config);
+        this WebApplicationBuilder builder) => builder.Services.AddHeadersPropagation();
 
     public static IServiceCollection AddHeadersPropagation(
-        this IServiceCollection services,
-        IConfiguration config
-    )
+        this IServiceCollection services)
     {
-        services.AddHeaderPropagation(options =>
-        {
-            options.Headers.Add(CorrelationIdHeaderKey);
-        });
+        services.AddHeaderPropagation(options => options.Headers.Add(CorrelationIdHeaderKey));
         return services;
     }
 }
