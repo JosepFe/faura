@@ -41,7 +41,7 @@ public class CustomWebApplicationFactory<TEntryPoint> : BaseWebApplicationFactor
 
         _postgresContainer = containerInstance.Container;
 
-        await containerInstance.StartAsync();
+        await StartContainerWithRetriesAsync(containerInstance);
 
         return new ConfigurationBuilder()
             .AddConfiguration(configuration)
@@ -67,5 +67,34 @@ public class CustomWebApplicationFactory<TEntryPoint> : BaseWebApplicationFactor
             configuration.GetConnectionString("Employee") !,
             DatabaseType.PostgreSQL,
             ServiceLifetime.Scoped);
+    }
+
+    private static async Task StartContainerWithRetriesAsync<TConfig>(
+        TestContainerInstance<TConfig> containerInstance)
+        where TConfig : ITestContainerConfiguration
+    {
+        const int maxRetries = 5;
+        var delay = TimeSpan.FromSeconds(5);
+        Exception? lastException = null;
+
+        for (int attempt = 1; attempt <= maxRetries; attempt++)
+        {
+            try
+            {
+                Console.WriteLine($"Starting container (attempt {attempt}/{maxRetries})...");
+                await containerInstance.StartAsync();
+                Console.WriteLine($"Container started successfully.");
+                return;
+            }
+            catch (Exception ex)
+            {
+                lastException = ex;
+                Console.WriteLine($"Failed to start container: {ex.Message}");
+                if (attempt < maxRetries)
+                    await Task.Delay(delay);
+            }
+        }
+
+        throw new InvalidOperationException($"Could not start container after {maxRetries} attempts.", lastException);
     }
 }
