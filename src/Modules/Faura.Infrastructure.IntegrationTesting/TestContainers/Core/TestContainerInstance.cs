@@ -27,6 +27,8 @@ public class TestContainerInstance<T>
         _container = builder.Build();
     }
 
+    public IContainer Container => _container;
+
     public string ConnectionString { get; private set; } = string.Empty;
 
     public async Task StartAsync()

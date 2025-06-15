@@ -3,8 +3,9 @@ namespace Faura.WebAPI.Bootstrappers;
 using Faura.Infrastructure.UnitOfWork;
 using Faura.Infrastructure.UnitOfWork.Common;
 using Faura.Infrastructure.UnitOfWork.Enums;
-using Faura.WebAPI.Domain;
+using Faura.WebAPI.Domain.Repositories;
 using Faura.WebAPI.Infrastructure.Persistence;
+using Faura.WebAPI.Infrastructure.Repositories;
 
 public static class ApplicationBootstrapper
 {

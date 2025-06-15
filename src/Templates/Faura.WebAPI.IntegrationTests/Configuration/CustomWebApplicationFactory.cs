@@ -18,9 +18,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 public class CustomWebApplicationFactory<TEntryPoint> : BaseWebApplicationFactory<TEntryPoint>
     where TEntryPoint : class
 {
-    private readonly IContainer? _postgresContainer;
-
-    public CustomWebApplicationFactory(IContainer? postgresContainer) => _postgresContainer = postgresContainer;
+    private IContainer? _postgresContainer;
 
     public override async Task DisposeAsync()
     {
@@ -40,6 +38,8 @@ public class CustomWebApplicationFactory<TEntryPoint> : BaseWebApplicationFactor
 
         var pgConfig = new PostgresContainerConfiguration(pgOptions);
         var containerInstance = new TestContainerInstance<PostgresContainerConfiguration>(pgConfig);
+
+        _postgresContainer = containerInstance.Container;
 
         await containerInstance.StartAsync();
 
