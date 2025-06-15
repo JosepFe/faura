@@ -45,7 +45,7 @@ jobs:
       - name: Run Unit Tests with Coverage (WebAPI)
         run: |
           dotnet test src/Templates/Faura.WebAPI.UnitTests/Faura.WebAPI.UnitTests.csproj \
-            --no-build --configuration Release \
+            --configuration Release \
             /p:CollectCoverage=true \
             /p:CoverletOutputFormat=opencover \
             /p:CoverletOutput=coverage/webapi/
