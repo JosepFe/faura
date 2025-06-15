@@ -28,7 +28,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore src/Faura.sln
 
-      - name: Begin SonarCloud Analysis
+      - name: Begin SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -37,18 +37,25 @@ jobs:
             /o:"josepfe" \
             /d:sonar.login="${SONAR_TOKEN}" \
             /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+            /d:sonar.cs.opencover.reportsPaths="coverage/combined/coverage.opencover.xml"
 
       - name: Build solution
         run: dotnet build src/Faura.sln --no-restore --no-incremental
 
-      - name: Test with coverage
+      - name: Run Unit Tests with Coverage (WebAPI)
         run: |
-          dotnet test src/Faura.sln --no-build --configuration Release \
+          dotnet test src/Templates/Faura.WebAPI.UnitTests/Faura.WebAPI.UnitTests.csproj \
+            --no-build --configuration Release \
             /p:CollectCoverage=true \
             /p:CoverletOutputFormat=opencover \
-            /p:CoverletOutput=TestResults/coverage. \
-            /p:Exclude="[xunit.*]*"
+            /p:CoverletOutput=coverage/webapi/
+      
+      - name: Merge coverage reports
+        run: |
+          ~/.dotnet/tools/reportgenerator \
+            -reports:"coverage/**/coverage.opencover.xml" \
+            -targetdir:"coverage/combined" \
+            -reporttypes:Html
 
       - name: End SonarCloud Analysis
         env:
