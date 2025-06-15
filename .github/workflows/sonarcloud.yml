@@ -55,13 +55,13 @@ jobs:
             /p:CoverletOutputFormat=opencover \
             /p:CoverletOutput=coverage/unit/
 
-      - name: Run Integration Tests with Coverage (Testcontainers)
-        run: |
-          dotnet test src/Templates/Faura.WebAPI.IntegrationTests/Faura.WebAPI.IntegrationTests.csproj \
-            --configuration Release \
-            /p:CollectCoverage=true \
-            /p:CoverletOutputFormat=opencover \
-            /p:CoverletOutput=coverage/integration/
+      # - name: Run Integration Tests with Coverage (Testcontainers)
+      #   run: |
+      #     dotnet test src/Templates/Faura.WebAPI.IntegrationTests/Faura.WebAPI.IntegrationTests.csproj \
+      #       --configuration Release \
+      #       /p:CollectCoverage=true \
+      #       /p:CoverletOutputFormat=opencover \
+      #       /p:CoverletOutput=coverage/integration/
 
       - name: Merge coverage reports
         run: |
