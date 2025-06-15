@@ -87,8 +87,7 @@ public static class DatabaseConfigurator
 
         if (context == null)
         {
-            string message = $"Unable to resolve {typeof(TContext).FullName}. Database migration will not be performed.";
-            logger?.LogError(message);
+            logger?.LogError("Unable to resolve {ContextType}. Database migration will not be performed.", typeof(TContext).FullName);
             return;
         }
 
@@ -99,9 +98,7 @@ public static class DatabaseConfigurator
         catch (Exception ex)
         {
             string contextName = typeof(TContext).FullName ?? "UnknownContext";
-            string errorMessage = $"An error occurred while migrating the database for context {contextName}. See inner exception for details.";
-            logger?.LogError(ex, errorMessage);
-            throw new InvalidOperationException(errorMessage, ex);
+            logger?.LogError(ex, "An error occurred while migrating the database for context {ContextName}. See inner exception for details.", contextName);
         }
     }
 }

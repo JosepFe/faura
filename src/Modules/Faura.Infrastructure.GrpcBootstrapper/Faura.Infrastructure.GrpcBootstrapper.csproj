@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+    
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -21,6 +21,16 @@
 		<PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
 	</ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\Faura.Infrastructure.Common\Faura.Infrastructure.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <SonarQubeSetting Include="sonar.coverage.exclusions">
+            <Value>**/**/*.cs</Value>
+        </SonarQubeSetting>
+    </ItemGroup>
+
 	<ItemGroup>
 		<None Include="README.md">
 			<Pack>True</Pack>
@@ -31,9 +41,5 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\Faura.Infrastructure.Common\Faura.Infrastructure.Common.csproj" />
-	</ItemGroup>
-
+    
 </Project>

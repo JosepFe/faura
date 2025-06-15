@@ -24,6 +24,12 @@
       <PackageReference Include="Dapper" Version="2.1.66" />
     </ItemGroup>
 
+    <ItemGroup>
+        <SonarQubeSetting Include="sonar.coverage.exclusions">
+            <Value>**/**/*.cs</Value>
+        </SonarQubeSetting>
+    </ItemGroup>
+
 	<ItemGroup>
 		<None Include="README.md">
 			<Pack>True</Pack>
