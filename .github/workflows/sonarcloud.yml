@@ -36,10 +36,19 @@ jobs:
             /k:"JosepFe_faura" \
             /o:"josepfe" \
             /d:sonar.login="${SONAR_TOKEN}" \
-            /d:sonar.host.url="https://sonarcloud.io"
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
 
       - name: Build solution
         run: dotnet build src/Faura.sln --no-restore --no-incremental
+
+      - name: Test with coverage
+        run: |
+          dotnet test src/Faura.sln --no-build --configuration Release \
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=opencover \
+            /p:CoverletOutput=TestResults/coverage. \
+            /p:Exclude="[xunit.*]*"
 
       - name: End SonarCloud Analysis
         env:
