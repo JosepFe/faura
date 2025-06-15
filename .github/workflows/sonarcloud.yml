@@ -49,24 +49,19 @@ jobs:
 
       - name: Run Unit Tests with Coverage (WebAPI)
         run: |
+          mkdir -p coverage/unit
           dotnet test src/Templates/Faura.WebAPI.UnitTests/Faura.WebAPI.UnitTests.csproj \
             --configuration Release \
             /p:CollectCoverage=true \
             /p:CoverletOutputFormat=opencover \
-            /p:CoverletOutput=coverage/unit/
-
-      # - name: Run Integration Tests with Coverage (Testcontainers)
-      #   run: |
-      #     dotnet test src/Templates/Faura.WebAPI.IntegrationTests/Faura.WebAPI.IntegrationTests.csproj \
-      #       --configuration Release \
-      #       /p:CollectCoverage=true \
-      #       /p:CoverletOutputFormat=opencover \
-      #       /p:CoverletOutput=coverage/integration/
+            /p:CoverletOutput=coverage/unit/ \
+            --no-build
 
       - name: Merge coverage reports
         run: |
+          mkdir -p coverage/combined
           reportgenerator \
-            -reports:"coverage/**/coverage.opencover.xml" \
+            -reports:"coverage/unit/coverage.opencover.xml" \
             -targetdir:"coverage/combined" \
             -reporttypes:Html
 
