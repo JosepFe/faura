@@ -1,8 +1,8 @@
-﻿using Faura.Infrastructure.IntegrationTesting.Seeders;
-using Faura.WebAPI.Domain;
+﻿using Faura.WebAPI.Domain;
 using Faura.WebAPI.Domain.Entities;
+using Faura.WebAPI.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
-using YourNamespace.Data;
+using Faura.Infrastructure.IntegrationTesting.Seeders;
 
 namespace Faura.IntegrationTest.Seeders;
 

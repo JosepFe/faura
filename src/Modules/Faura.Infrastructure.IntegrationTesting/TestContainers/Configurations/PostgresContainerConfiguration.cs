@@ -1,11 +1,13 @@
-﻿using Faura.Infrastructure.IntegrationTesting.Options;
-using Faura.Infrastructure.IntegrationTesting.TestContainers.Constants;
-using Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
+﻿namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Configurations;
 
-namespace Faura.Infrastructure.IntegrationTesting.TestContainers.Configurations;
+using Faura.Infrastructure.IntegrationTesting.Options;
+using Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
 
 public class PostgresContainerConfiguration : ITestContainerConfiguration
 {
+    private const string DefaultImage = "postgres:15-alpine";
+    private const int PostgresInternalPort = 5432;
+
     private readonly ContainerOptions _options;
 
     public PostgresContainerConfiguration(ContainerOptions options)
@@ -15,11 +17,12 @@ public class PostgresContainerConfiguration : ITestContainerConfiguration
 
     public string Image =>
         string.IsNullOrWhiteSpace(_options.Image)
-            ? ContainerDefaultsConstants.Images.Postgres
+            ? DefaultImage
             : _options.Image;
 
-    public int Port =>
-        _options.Port != 0 ? _options.Port : ContainerDefaultsConstants.Ports.Postgres;
+    public int? Port => _options.Port;
+
+    public int InternalPort => PostgresInternalPort;
 
     public string Username => _options.Username ?? "postgres";
     public string Password => _options.Password ?? "postgres";
@@ -33,6 +36,6 @@ public class PostgresContainerConfiguration : ITestContainerConfiguration
             ["POSTGRES_DB"] = Database,
         };
 
-    public string BuildConnectionString(int mappedPort) =>
-        $"Host=localhost;Port={mappedPort};Username={Username};Password={Password};Database={Database}";
+    public string BuildConnectionString(string host, int mappedPort) =>
+        $"Host={host};Port={mappedPort};Username={Username};Password={Password};Database={Database}";
 }

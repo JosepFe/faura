@@ -3,11 +3,12 @@
 public interface ITestContainerConfiguration
 {
     string Image { get; }
-    int Port { get; }
+    int? Port { get; }
+    int InternalPort { get; }
     string Username { get; }
     string Password { get; }
     string Database { get; }
 
     Dictionary<string, string> GetEnvironmentVariables();
-    string BuildConnectionString(int mappedPort);
+    string BuildConnectionString(string host, int mappedPort);
 }
