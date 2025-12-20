@@ -1,7 +1,7 @@
 ﻿using Faura.WebAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace YourNamespace.Data;
+namespace Faura.WebAPI.Infrastructure.Persistence;
 
 public class EmployeeDbContext : DbContext
 {

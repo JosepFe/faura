@@ -1,12 +1,12 @@
-﻿using Faura.Infrastructure.IntegrationTesting.Constants;
-using Faura.Infrastructure.IntegrationTesting.Seeders;
+namespace Faura.Infrastructure.IntegrationTesting.Factory;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Faura.Infrastructure.IntegrationTesting.Constants;
+using Faura.Infrastructure.IntegrationTesting.Seeders;
 using Xunit;
-
-namespace Faura.Infrastructure.IntegrationTesting.Factory;
 
 /// <summary>
 /// Base factory for integration tests with container setup and service customization.
@@ -16,47 +16,67 @@ public abstract class BaseWebApplicationFactory<TEntryPoint>
         IAsyncLifetime
     where TEntryPoint : class
 {
-    /// <summary>
-    /// Final configuration used during the test run.
-    /// </summary>
-    protected IConfiguration? Configuration;
+    private static readonly SemaphoreSlim _initializationLock = new(1, 1);
+    private static bool _isInitialized;
+    private static IConfiguration? _sharedConfiguration;
+
+    protected IConfiguration? Configuration { get; set; }
 
     public async Task InitializeAsync()
     {
-        Environment.SetEnvironmentVariable(
-            "ASPNETCORE_ENVIRONMENT",
-            IntegrationTestConstants.Environment
-        );
+        await _initializationLock.WaitAsync();
+        try
+        {
+            if (!_isInitialized)
+            {
+                Environment.SetEnvironmentVariable(
+                    "ASPNETCORE_ENVIRONMENT",
+                    IntegrationTestConstants.Environment);
 
-        var testProjectPath = Directory.GetCurrentDirectory();
-        var settingsFile = Path.Combine(
-            testProjectPath,
-            $"appsettings.{IntegrationTestConstants.Environment}.json"
-        );
+                var testProjectPath = Directory.GetCurrentDirectory();
+                var settingsFile = Path.Combine(
+                    testProjectPath,
+                    $"appsettings.{IntegrationTestConstants.Environment}.json");
 
-        var configBuilder = new ConfigurationBuilder()
-            .AddJsonFile(settingsFile, optional: false)
-            .AddEnvironmentVariables();
+                var configBuilder = new ConfigurationBuilder()
+                    .AddJsonFile(settingsFile, optional: false)
+                    .AddEnvironmentVariables();
 
-        await ConfigureConfigurationAsync(configBuilder);
+                await ConfigureConfigurationAsync(configBuilder);
 
-        var baseConfig = configBuilder.Build();
-        Configuration = await ConfigureTestContainersAsync(baseConfig);
+                var baseConfig = configBuilder.Build();
+                _sharedConfiguration = await ConfigureTestContainersAsync(baseConfig);
+
+                _isInitialized = true;
+            }
+
+            Configuration = _sharedConfiguration;
+        }
+        finally
+        {
+            _initializationLock.Release();
+        }
     }
 
-    public virtual Task DisposeAsync() => Task.CompletedTask;
+    public override async ValueTask DisposeAsync()
+    {
+        await base.DisposeAsync();
+        GC.SuppressFinalize(this);
+    }
+
+    async Task IAsyncLifetime.DisposeAsync() => await DisposeAsync();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment(IntegrationTestConstants.Environment);
 
-        builder.ConfigureAppConfiguration(
-            (_, config) =>
-            {
-                config.Sources.Clear();
-                config.AddConfiguration(Configuration!);
-            }
-        );
+        builder
+            .UseConfiguration(Configuration!)
+            .ConfigureAppConfiguration(
+                (_, config) =>
+                {
+                    config.AddConfiguration(Configuration!);
+                });
 
         builder.ConfigureServices(services =>
         {
@@ -65,7 +85,10 @@ public abstract class BaseWebApplicationFactory<TEntryPoint>
 
             using var provider = services.BuildServiceProvider(validateScopes: true);
             using var scope = provider.CreateScope();
-            RunSeedersAsync(scope.ServiceProvider).GetAwaiter().GetResult();
+
+            BaseWebApplicationFactory<TEntryPoint>.RunSeedersAsync(scope.ServiceProvider)
+                .GetAwaiter()
+                .GetResult();
         });
     }
 
@@ -79,26 +102,27 @@ public abstract class BaseWebApplicationFactory<TEntryPoint>
     /// Starts containers and returns updated configuration (e.g., with connection strings).
     /// </summary>
     protected virtual Task<IConfiguration> ConfigureTestContainersAsync(
-        IConfiguration configuration
-    ) => Task.FromResult(configuration);
+        IConfiguration configuration) => Task.FromResult(configuration);
 
     /// <summary>
     /// Registers test-specific or mocked services.
     /// </summary>
     protected virtual void ConfigureTestServices(
         IServiceCollection services,
-        IConfiguration configuration
-    ) { }
+        IConfiguration configuration)
+    {
+    }
 
     /// <summary>
     /// Registers database context and ensures schema is created.
     /// </summary>
     protected virtual void ConfigureTestDatabase(
         IServiceCollection services,
-        IConfiguration configuration
-    ) { }
+        IConfiguration configuration)
+    {
+    }
 
-    private async Task RunSeedersAsync(IServiceProvider serviceProvider)
+    private static async Task RunSeedersAsync(IServiceProvider serviceProvider)
     {
         foreach (var seeder in serviceProvider.GetServices<ITestDataSeeder>())
         {

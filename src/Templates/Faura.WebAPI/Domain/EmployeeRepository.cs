@@ -1,6 +1,6 @@
 ﻿using Faura.Infrastructure.UnitOfWork.Repositories;
 using Faura.WebAPI.Domain.Entities;
-using YourNamespace.Data;
+using Faura.WebAPI.Infrastructure.Persistence;
 
 namespace Faura.WebAPI.Domain;
 
