@@ -1,16 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
+namespace Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.ApiKey;
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-
-namespace Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.ApiKey;
 
 public static class ApiKeyExtensions
 {
     public static SwaggerGenOptions AddApiKeyAuthentication(
         this SwaggerGenOptions options,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         var apiKeyOptions = configuration
             .GetSection(ApiKeyOptions.SectionName)
@@ -27,8 +26,7 @@ public static class ApiKeyExtensions
                 Name = apiKeyOptions.Name,
                 In = apiKeyOptions.In,
                 Description = "API Key Authentication",
-            }
-        );
+            });
 
         options.AddSecurityRequirement(
             new OpenApiSecurityRequirement
@@ -44,8 +42,7 @@ public static class ApiKeyExtensions
                     },
                     new List<string>()
                 },
-            }
-        );
+            });
 
         return options;
     }

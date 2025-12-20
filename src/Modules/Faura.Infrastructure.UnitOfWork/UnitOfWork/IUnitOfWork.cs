@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.UnitOfWork;
+namespace Faura.Infrastructure.UnitOfWork.UnitOfWork;
 
 using System.Data;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 public interface IUnitOfWork
 {
     /// <summary>
-    /// Begins the transaction
+    /// Begins the transaction.
     /// </summary>
     Task<IDbTransaction> GetDbTransaction(int secondsTimeout = 30);
 

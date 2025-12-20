@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
 namespace Faura.Infrastructure.ApiBootstrapper.Extensions;
+
+using Microsoft.Extensions.DependencyInjection;
 
 public static class ApiExtensions
 {
@@ -8,7 +8,6 @@ public static class ApiExtensions
     /// Configures controllers.
     /// </summary>
     /// <param name="services"><see cref="IServiceCollection"/> services.</param>
-    /// <returns><see cref="IMvcBuilder"/></returns>
     public static IMvcBuilder ConfigureControllers(this IServiceCollection services) =>
         services.AddControllers();
 }

@@ -1,8 +1,8 @@
-﻿using Faura.Infrastructure.ApiBootstrapper.Extensions;
+namespace Faura.Infrastructure.ApiBootstrapper.Middlewares.CorrelationId;
+
+using Faura.Infrastructure.ApiBootstrapper.Extensions;
 using Microsoft.AspNetCore.HeaderPropagation;
 using Microsoft.AspNetCore.Http;
-
-namespace Faura.Infrastructure.ApiBootstrapper.Middlewares.CorrelationId;
 
 public class CorrelationIdMiddleware
 {
@@ -11,14 +11,13 @@ public class CorrelationIdMiddleware
 
     public CorrelationIdMiddleware(
         RequestDelegate next,
-        HeaderPropagationValues headerPropagationValues
-    )
+        HeaderPropagationValues headerPropagationValues)
     {
         _next = next;
         _headerPropagationValues = headerPropagationValues;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public Task InvokeAsync(HttpContext context)
     {
         var correlationId = context
             .Request.Headers[HeadersPropagationExtensions.CorrelationIdHeaderKey]
@@ -28,12 +27,10 @@ public class CorrelationIdMiddleware
             correlationId = Guid.NewGuid().ToString();
             context.Request.Headers.TryAdd(
                 HeadersPropagationExtensions.CorrelationIdHeaderKey,
-                correlationId
-            );
+                correlationId);
             _headerPropagationValues.Headers!.TryAdd(
                 HeadersPropagationExtensions.CorrelationIdHeaderKey,
-                correlationId
-            );
+                correlationId);
         }
 
         var responseHeader = context
@@ -43,10 +40,9 @@ public class CorrelationIdMiddleware
         {
             context.Response.Headers.TryAdd(
                 HeadersPropagationExtensions.CorrelationIdHeaderKey,
-                correlationId
-            );
+                correlationId);
         }
 
-        await _next(context);
+        return _next(context);
     }
 }

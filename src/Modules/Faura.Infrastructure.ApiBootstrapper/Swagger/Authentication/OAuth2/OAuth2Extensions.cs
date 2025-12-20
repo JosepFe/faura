@@ -1,16 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
+namespace Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.OAuth2;
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-
-namespace Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.OAuth2;
 
 public static class OAuth2Extensions
 {
     public static SwaggerGenOptions AddOAuth2Authentication(
         this SwaggerGenOptions options,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         var oauth2Options = configuration
             .GetSection(OAuth2Options.SectionName)
@@ -21,7 +20,7 @@ public static class OAuth2Extensions
 
         // Security Definition
         options.AddSecurityDefinition(
-            oauth2Options.Name,
+            oauth2Options!.Name,
             new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.OAuth2,
@@ -29,12 +28,11 @@ public static class OAuth2Extensions
                 {
                     Implicit = new OpenApiOAuthFlow
                     {
-                        AuthorizationUrl = new Uri(oauth2Options.AuthenticationURL),
+                        AuthorizationUrl = new Uri(oauth2Options.AuthenticationURL!),
                         Scopes = oauth2Options.Scopes,
                     },
                 },
-            }
-        );
+            });
 
         // Security Requirement
         var requirement = new OpenApiSecurityRequirement

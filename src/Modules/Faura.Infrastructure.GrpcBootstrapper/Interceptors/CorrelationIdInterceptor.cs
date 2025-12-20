@@ -1,24 +1,21 @@
-﻿using Grpc.Core;
+namespace Faura.Infrastructure.GrpcBootstrapper.Interceptors;
+
+using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Microsoft.AspNetCore.HeaderPropagation;
 
-namespace Faura.Infrastructure.GrpcBootstrapper.Interceptors;
-
 public class CorrelationIdInterceptor : Interceptor
 {
-    private readonly HeaderPropagationValues _headerPropagationValues;
     private const string HeaderKey = "x-correlation-id";
+    private readonly HeaderPropagationValues _headerPropagationValues;
 
     public CorrelationIdInterceptor(HeaderPropagationValues headerPropagationValues)
-    {
-        _headerPropagationValues = headerPropagationValues;
-    }
+        => _headerPropagationValues = headerPropagationValues;
 
-    public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
+    public override Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
         TRequest request,
         ServerCallContext context,
-        UnaryServerMethod<TRequest, TResponse> continuation
-    )
+        UnaryServerMethod<TRequest, TResponse> continuation)
     {
         var correlationId = context.RequestHeaders.GetValue(HeaderKey) ?? Guid.NewGuid().ToString();
 
@@ -26,6 +23,6 @@ public class CorrelationIdInterceptor : Interceptor
 
         context.ResponseTrailers.Add(HeaderKey, correlationId);
 
-        return await continuation(request, context);
+        return continuation(request, context);
     }
 }

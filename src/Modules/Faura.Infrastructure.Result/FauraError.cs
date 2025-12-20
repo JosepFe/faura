@@ -1,20 +1,12 @@
-﻿namespace Faura.Infrastructure.Result;
+namespace Faura.Infrastructure.Result;
 
 using System.Net;
 
-public class FauraError
+public class FauraError(string code, string message, HttpStatusCode? httpStatus = null)
 {
-    public string Code { get; init; }
+    public string Code { get; init; } = code;
 
-    public string Message { get; init; }
+    public string Message { get; init; } = message;
 
-    public HttpStatusCode HttpStatus { get; private set; }
-
-    public FauraError(string code, string message, HttpStatusCode? httpStatus = null)
-    {
-        Code = code;
-        Message = message;
-        HttpStatus = httpStatus ?? HttpStatusCode.InternalServerError;
-    }
-
+    public HttpStatusCode HttpStatus { get; private set; } = httpStatus ?? HttpStatusCode.InternalServerError;
 }

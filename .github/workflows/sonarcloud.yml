@@ -22,13 +22,18 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install SonarScanner
-        run: dotnet tool install --global dotnet-sonarscanner
+      - name: Install global tools (SonarScanner + ReportGenerator)
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Add tool path to environment
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
       - name: Restore dependencies
         run: dotnet restore src/Faura.sln
 
-      - name: Begin SonarCloud Analysis
+      - name: Begin SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -36,10 +41,35 @@ jobs:
             /k:"JosepFe_faura" \
             /o:"josepfe" \
             /d:sonar.login="${SONAR_TOKEN}" \
-            /d:sonar.host.url="https://sonarcloud.io"
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.cs.opencover.reportsPaths="coverage/combined/coverage.opencover.xml"
 
       - name: Build solution
-        run: dotnet build src/Faura.sln --no-restore --no-incremental
+        run: dotnet build src/Faura.sln --no-restore --configuration Release
+
+      - name: Run Unit Tests with Coverage (WebAPI)
+        run: |
+          mkdir -p coverage/unit
+          dotnet test src/Templates/Faura.WebAPI.UnitTests/Faura.WebAPI.UnitTests.csproj \
+            --configuration Release \
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=opencover \
+            /p:CoverletOutput=coverage/unit/ \
+            --no-build
+
+      - name: Merge coverage reports
+        run: |
+          mkdir -p coverage/combined
+          reportgenerator \
+            -reports:"coverage/unit/coverage.opencover.xml" \
+            -targetdir:"coverage/combined" \
+            -reporttypes:Html
+
+      - name: Upload Coverage Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CoverageReport
+          path: coverage/combined
 
       - name: End SonarCloud Analysis
         env:

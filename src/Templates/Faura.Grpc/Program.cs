@@ -10,4 +10,11 @@ var app = builder.Build();
 
 app.ConfigureCommonFauraWebApplication(GrpcBootstrapper.RegisterGrpcServices());
 
-app.Run();
+await app.RunAsync();
+
+public partial class Program
+{
+    protected Program()
+    {
+    }
+}

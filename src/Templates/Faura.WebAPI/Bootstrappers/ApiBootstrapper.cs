@@ -1,8 +1,8 @@
-﻿using Faura.Infrastructure.ApiBootstrapper.Extensions;
+namespace Faura.WebAPI.Bootstrappers;
+
 using Faura.Infrastructure.JWT.Extensions;
 using Faura.Infrastructure.Logger;
-
-namespace Faura.WebAPI.Bootstrappers;
+using Faura.Infrastructure.ApiBootstrapper.Extensions;
 
 public static class ApiBootstrapper
 {

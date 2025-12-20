@@ -1,16 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
+namespace Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.Bearer;
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-
-namespace Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.Bearer;
 
 public static class BearerExtensions
 {
     public static SwaggerGenOptions AddBearerAuthentication(
         this SwaggerGenOptions options,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         var bearerOptions = configuration
             .GetSection(BearerOptions.SectionName)
@@ -30,8 +29,7 @@ public static class BearerExtensions
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
                 Description = "JWT Authorization header using the Bearer scheme.",
-            }
-        );
+            });
 
         // Security Requirement
         var requirement = new OpenApiSecurityRequirement

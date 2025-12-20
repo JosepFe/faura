@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.BasicAuth;
+namespace Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.BasicAuth;
 
 public class BasicAuthOptions
 {

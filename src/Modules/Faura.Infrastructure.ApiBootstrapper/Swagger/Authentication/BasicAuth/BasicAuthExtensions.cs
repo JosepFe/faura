@@ -1,16 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
+namespace Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.BasicAuth;
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-
-namespace Faura.Infrastructure.ApiBootstrapper.Swagger.Authentication.BasicAuth;
 
 public static class BasicAuthExtensions
 {
     public static SwaggerGenOptions AddBasicAuthentication(
         this SwaggerGenOptions options,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         var basicAuthOptions = configuration
             .GetSection(BasicAuthOptions.SectionName)
@@ -21,14 +20,13 @@ public static class BasicAuthExtensions
 
         // Security Definition
         options.AddSecurityDefinition(
-            basicAuthOptions.Name,
+            basicAuthOptions!.Name,
             new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.Http,
                 Scheme = "basic",
                 Description = "Basic Authentication",
-            }
-        );
+            });
 
         // Security Requirement
         options.AddSecurityRequirement(
@@ -45,8 +43,7 @@ public static class BasicAuthExtensions
                     },
                     new List<string>()
                 },
-            }
-        );
+            });
 
         return options;
     }

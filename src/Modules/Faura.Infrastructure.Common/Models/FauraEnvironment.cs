@@ -1,5 +1,4 @@
-﻿namespace Faura.Configurations;
-
+namespace Faura.Infrastructure.Common.Models;
 public enum FauraDeploymentMode
 {
     Local,
@@ -12,8 +11,8 @@ public enum FauraDeploymentMode
 
 public static class FauraEnvironment
 {
-    private static FauraDeploymentMode? _currentMode;
     private const string FauraEnvVariableName = "FAURA_ENVIRONMENT";
+    private static FauraDeploymentMode? _currentMode;
 
     public static FauraDeploymentMode CurrentMode => _currentMode ??= DetectMode();
 

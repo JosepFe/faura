@@ -1,23 +1,21 @@
-﻿using Faura.Infrastructure.Common.Utils;
+namespace Faura.Infrastructure.JWT.Extensions;
+
+using Faura.Infrastructure.Common.Utils;
 using Faura.Infrastructure.JWT.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Faura.Infrastructure.JWT.Extensions;
-
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection SetUpJwt(
         this IServiceCollection services,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         var jwtOptions = services.GetTypedOptions<JwtOptions>(
             configuration,
-            JwtOptions.SectionName
-        );
+            JwtOptions.SectionName);
 
         services.AddAuthorization();
         services
