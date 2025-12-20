@@ -1,65 +1,59 @@
-namespace Faura.WebAPI.Controllers;
-
-using Faura.Infrastructure.Logger.Extensions;
+using Faura.WebAPI.Application;
 using Faura.WebAPI.Domain.Entities;
-using Faura.WebAPI.Domain.Repositories;
-using Faura.WebAPI.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+
+namespace Faura.WebAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class EmployeeController(
-    ILogger<EmployeeController> logger,
-    IEmployeeRepository employeeRepository,
-    IEmployeeUoW uoW)
-    : ControllerBase
+public class EmployeeController : ControllerBase
 {
+    private readonly IEmployeeService _employeeService;
+
+    public EmployeeController(IEmployeeService employeeService)
+    {
+        _employeeService = employeeService;
+    }
+
     [HttpGet(Name = "GetEmployees")]
-    public async Task<IActionResult> Get()
+    public async Task<IEnumerable<Employee>> Get()
     {
-        logger.LogFauraInformation("Getting all employees");
-        var employees = await employeeRepository.GetAsync();
-        return Ok(employees);
+        return await _employeeService.GetEmployeesAsync();
     }
 
-    [HttpPost("batch")]
-    public async Task<IActionResult> CreateBatch()
+    [HttpPost(Name = "CreateEmployee")]
+    public async Task<Employee> Create([FromBody] CreateEmployeeRequest request)
     {
-        logger.LogFauraInformation("Creating two employees in a transaction");
-
-        var transaction = await uoW.GetDbTransaction();
-
-        await employeeRepository.CreateAsync(new Employee("Josep", "Ferrandis", "josep1@example.com"));
-        await employeeRepository.CreateAsync(new Employee("Josep", "Ferrandis", "josep2@example.com"));
-
-        await uoW.CommitTransaction(transaction);
-
-        return Ok("Two employees created in transaction.");
+        return await _employeeService.CreateEmployeeAsync(
+            request.FirstName,
+            request.LastName,
+            request.Email
+        );
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Employee employee)
+    [HttpPost("multiple", Name = "CreateMultipleEmployees")]
+    public async Task<IEnumerable<Employee>> CreateMultiple(
+        [FromBody] CreateMultipleEmployeesRequest request
+    )
     {
-        await employeeRepository.CreateAsync(employee);
-        return CreatedAtAction(nameof(GetById), new { id = employee.Id }, employee);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(long id)
-    {
-        var employee = await employeeRepository.GetByIdAsync(id);
-        return employee is not null ? Ok(employee) : NotFound();
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(long id)
-    {
-        var employee = await employeeRepository.GetByIdAsync(id);
-        if (employee is null)
-            return NotFound();
-
-        await employeeRepository.DeleteAsync(employee);
-        return NoContent();
+        return await _employeeService.CreateMultipleEmployeesWithTransactionAsync(
+            request.FirstName1,
+            request.LastName1,
+            request.Email1,
+            request.FirstName2,
+            request.LastName2,
+            request.Email2
+        );
     }
 }
+
+public record CreateEmployeeRequest(string FirstName, string LastName, string Email);
+
+public record CreateMultipleEmployeesRequest(
+    string FirstName1,
+    string LastName1,
+    string Email1,
+    string FirstName2,
+    string LastName2,
+    string Email2
+);

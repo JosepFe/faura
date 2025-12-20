@@ -1,4 +1,4 @@
-namespace Faura.Infrastructure.IntegrationTesting.Seeders;
+﻿namespace Faura.Infrastructure.IntegrationTesting.Seeders;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

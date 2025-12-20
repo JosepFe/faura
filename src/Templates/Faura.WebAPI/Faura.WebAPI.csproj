@@ -8,28 +8,31 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4" />
+    <PackageReference Include="Faura.Infrastructure.Result" Version="8.0.1-preview.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Modules\Faura.Infrastructure.ApiBootstrapper\Faura.Infrastructure.ApiBootstrapper.csproj" />
     <ProjectReference Include="..\..\Modules\Faura.Infrastructure.JWT\Faura.Infrastructure.JWT.csproj" />
     <ProjectReference Include="..\..\Modules\Faura.Infrastructure.Logger\Faura.Infrastructure.Logger.csproj" />
-    <ProjectReference Include="..\..\Modules\Faura.Infrastructure.Result\Faura.Infrastructure.Result.csproj" />
     <ProjectReference Include="..\..\Modules\Faura.Infrastructure.UnitOfWork\Faura.Infrastructure.UnitOfWork.csproj" />
   </ItemGroup>
 
-    <ItemGroup>
-        <SonarQubeSetting Include="sonar.coverage.exclusions">
-            <Value>**/Bootstrappers/*.cs</Value>
-            <Value>**/Domain/*.cs</Value>
-            <Value>**/Persistence/*.cs</Value>
-            <Value>**/**/Program.cs</Value>
-        </SonarQubeSetting>
-    </ItemGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="Faura.IntegrationTest" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Application\" />
-    </ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Infrastructure\Persistence\Migrations\" />
+	</ItemGroup>
 
 </Project>

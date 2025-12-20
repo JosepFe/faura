@@ -1,14 +1,12 @@
-namespace Faura.WebAPI.Infrastructure.Persistence;
-
-using Faura.WebAPI.Domain.Entities;
+﻿using Faura.WebAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+
+namespace Faura.WebAPI.Infrastructure.Persistence;
 
 public class EmployeeDbContext : DbContext
 {
     public EmployeeDbContext(DbContextOptions<EmployeeDbContext> options)
-        : base(options)
-    {
-    }
+        : base(options) { }
 
     public DbSet<Employee> Employee { get; set; }
 

@@ -1,11 +1,11 @@
 namespace Faura.Infrastructure.IntegrationTesting.Factory;
 
-using Faura.Infrastructure.IntegrationTesting.Constants;
-using Faura.Infrastructure.IntegrationTesting.Seeders;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Faura.Infrastructure.IntegrationTesting.Constants;
+using Faura.Infrastructure.IntegrationTesting.Seeders;
 using Xunit;
 
 /// <summary>
@@ -16,41 +16,67 @@ public abstract class BaseWebApplicationFactory<TEntryPoint>
         IAsyncLifetime
     where TEntryPoint : class
 {
+    private static readonly SemaphoreSlim _initializationLock = new(1, 1);
+    private static bool _isInitialized;
+    private static IConfiguration? _sharedConfiguration;
+
     protected IConfiguration? Configuration { get; set; }
 
     public async Task InitializeAsync()
     {
-        Environment.SetEnvironmentVariable(
-            "ASPNETCORE_ENVIRONMENT",
-            IntegrationTestConstants.Environment);
+        await _initializationLock.WaitAsync();
+        try
+        {
+            if (!_isInitialized)
+            {
+                Environment.SetEnvironmentVariable(
+                    "ASPNETCORE_ENVIRONMENT",
+                    IntegrationTestConstants.Environment);
 
-        var testProjectPath = Directory.GetCurrentDirectory();
-        var settingsFile = Path.Combine(
-            testProjectPath,
-            $"appsettings.{IntegrationTestConstants.Environment}.json");
+                var testProjectPath = Directory.GetCurrentDirectory();
+                var settingsFile = Path.Combine(
+                    testProjectPath,
+                    $"appsettings.{IntegrationTestConstants.Environment}.json");
 
-        var configBuilder = new ConfigurationBuilder()
-            .AddJsonFile(settingsFile, optional: false)
-            .AddEnvironmentVariables();
+                var configBuilder = new ConfigurationBuilder()
+                    .AddJsonFile(settingsFile, optional: false)
+                    .AddEnvironmentVariables();
 
-        await ConfigureConfigurationAsync(configBuilder);
+                await ConfigureConfigurationAsync(configBuilder);
 
-        var baseConfig = configBuilder.Build();
-        Configuration = await ConfigureTestContainersAsync(baseConfig);
+                var baseConfig = configBuilder.Build();
+                _sharedConfiguration = await ConfigureTestContainersAsync(baseConfig);
+
+                _isInitialized = true;
+            }
+
+            Configuration = _sharedConfiguration;
+        }
+        finally
+        {
+            _initializationLock.Release();
+        }
     }
 
-    public new virtual Task DisposeAsync() => Task.CompletedTask;
+    public override async ValueTask DisposeAsync()
+    {
+        await base.DisposeAsync();
+        GC.SuppressFinalize(this);
+    }
+
+    async Task IAsyncLifetime.DisposeAsync() => await DisposeAsync();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment(IntegrationTestConstants.Environment);
 
-        builder.ConfigureAppConfiguration(
-            (_, config) =>
-            {
-                config.Sources.Clear();
-                config.AddConfiguration(Configuration!);
-            });
+        builder
+            .UseConfiguration(Configuration!)
+            .ConfigureAppConfiguration(
+                (_, config) =>
+                {
+                    config.AddConfiguration(Configuration!);
+                });
 
         builder.ConfigureServices(services =>
         {
@@ -59,7 +85,10 @@ public abstract class BaseWebApplicationFactory<TEntryPoint>
 
             using var provider = services.BuildServiceProvider(validateScopes: true);
             using var scope = provider.CreateScope();
-            RunSeedersAsync(scope.ServiceProvider).GetAwaiter().GetResult();
+
+            BaseWebApplicationFactory<TEntryPoint>.RunSeedersAsync(scope.ServiceProvider)
+                .GetAwaiter()
+                .GetResult();
         });
     }
 
