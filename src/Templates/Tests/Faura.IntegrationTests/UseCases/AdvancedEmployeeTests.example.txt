@@ -1,0 +1,250 @@
+namespace Faura.IntegrationTest.UseCases;
+
+using Faura.IntegrationTest.Configuration;
+using Faura.WebAPI.Domain.Entities;
+using Faura.Infrastructure.Result;
+using System.Net;
+using System.Net.Http.Json;
+
+/// <summary>
+/// Advanced integration test examples showcasing:
+/// - FauraResult pattern testing
+/// - Pagination and filtering
+/// - Concurrent operations
+/// - Error handling scenarios
+/// </summary>
+public class AdvancedEmployeeTests(CustomWebApplicationFactory factory) : IntegrationTestBase(factory)
+{
+    #region Pagination Tests
+
+    [Fact]
+    public async Task GetPaginated_ShouldReturnCorrectPage()
+    {
+        // Arrange - Create 10 employees
+        for (var i = 1; i <= 10; i++)
+        {
+            await EmployeeRepository.CreateAsync(
+                new Employee($"First{i}", $"Last{i}", $"user{i}@example.com")
+            );
+        }
+
+        // Act - Request page 2 with 3 items per page
+        var response = await Client.GetAsync("/Employee?pageNumber=2&pageSize=3");
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync<PagedResult<Employee>>();
+        
+        Assert.NotNull(result);
+        Assert.Equal(3, result.Items.Count());
+        Assert.Equal(2, result.CurrentPage);
+        Assert.True(result.TotalItems >= 10);
+    }
+
+    [Fact]
+    public async Task GetPaginated_ShouldFilterBySearchTerm()
+    {
+        // Arrange
+        await EmployeeRepository.CreateAsync(new Employee("John", "Smith", "john@example.com"));
+        await EmployeeRepository.CreateAsync(new Employee("Jane", "Doe", "jane@example.com"));
+        await EmployeeRepository.CreateAsync(new Employee("Bob", "Johnson", "bob@example.com"));
+
+        // Act - Search for "John"
+        var response = await Client.GetAsync("/Employee?searchTerm=John");
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync<PagedResult<Employee>>();
+        
+        Assert.NotNull(result);
+        Assert.All(result.Items, e => 
+            Assert.Contains("John", $"{e.FirstName} {e.LastName}", 
+                StringComparison.OrdinalIgnoreCase)
+        );
+    }
+
+    #endregion
+
+    #region Error Handling Tests
+
+    [Fact]
+    public async Task Create_ShouldReturnFauraError_WhenValidationFails()
+    {
+        // Arrange - Empty name
+        var request = new { firstName = "", lastName = "Doe", email = "test@example.com" };
+
+        // Act
+        var response = await Client.PostAsJsonAsync("/Employee", request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        
+        var errorResult = await response.Content.ReadFromJsonAsync<FauraError>();
+        Assert.NotNull(errorResult);
+        Assert.NotEmpty(errorResult.Message);
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnConflict_WhenDuplicateEmail()
+    {
+        // Arrange - Create employee
+        var email = "duplicate@example.com";
+        await EmployeeRepository.CreateAsync(new Employee("First", "User", email));
+
+        // Act - Try to create another with same email
+        var request = new { firstName = "Second", lastName = "User", email };
+        var response = await Client.PostAsJsonAsync("/Employee", request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+    }
+
+    #endregion
+
+    #region Transaction Tests
+
+    [Fact]
+    public async Task TransactionRollback_ShouldNotCreateAnyEmployee_WhenOneFailsInTransaction()
+    {
+        // Arrange
+        var countBefore = (await EmployeeRepository.GetAllAsync()).Count();
+
+        // Act - Second employee has invalid email to trigger rollback
+        var request = new
+        {
+            firstName1 = "Valid",
+            lastName1 = "User",
+            email1 = "valid@example.com",
+            firstName2 = "Invalid",
+            lastName2 = "User",
+            email2 = "invalid-email" // This should fail validation
+        };
+        
+        var response = await Client.PostAsJsonAsync("/Employee/multiple", request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        
+        var countAfter = (await EmployeeRepository.GetAllAsync()).Count();
+        Assert.Equal(countBefore, countAfter); // No employees should be created
+    }
+
+    #endregion
+
+    #region Concurrent Operations Tests
+
+    [Fact]
+    public async Task ConcurrentCreates_ShouldCreateAllEmployees()
+    {
+        // Arrange
+        var tasks = new List<Task<HttpResponseMessage>>();
+        
+        for (var i = 1; i <= 5; i++)
+        {
+            var request = new
+            {
+                firstName = $"Concurrent{i}",
+                lastName = "User",
+                email = $"concurrent{i}@example.com"
+            };
+            tasks.Add(Client.PostAsJsonAsync("/Employee", request));
+        }
+
+        // Act - Execute all requests concurrently
+        var responses = await Task.WhenAll(tasks);
+
+        // Assert
+        Assert.All(responses, r => Assert.True(r.IsSuccessStatusCode));
+        
+        var allEmployees = await EmployeeRepository.GetAllAsync();
+        var concurrentEmployees = allEmployees.Where(e => e.FirstName.StartsWith("Concurrent"));
+        Assert.Equal(5, concurrentEmployees.Count());
+    }
+
+    #endregion
+
+    #region Database State Tests
+
+    [Fact]
+    public async Task DbContext_ShouldTrackChanges_WithinScope()
+    {
+        // Arrange
+        var employee = await EmployeeRepository.CreateAsync(
+            new Employee("Track", "Me", "track@example.com")
+        );
+
+        // Act - Modify through DbContext
+        var tracked = await DbContext.Employees.FindAsync(employee.Id);
+        Assert.NotNull(tracked);
+        
+        tracked.UpdateEmail("newemail@example.com");
+        await DbContext.SaveChangesAsync();
+
+        // Assert - Changes should be persisted
+        var updated = await EmployeeRepository.GetByIdAsync(employee.Id);
+        Assert.Equal("newemail@example.com", updated!.Email);
+    }
+
+    [Fact]
+    public async Task DirectRepositoryAccess_ShouldWorkCorrectly()
+    {
+        // This test shows direct repository usage without HTTP
+        
+        // Arrange & Act
+        var employee = await EmployeeRepository.CreateAsync(
+            new Employee("Direct", "Access", "direct@example.com")
+        );
+
+        // Assert
+        var retrieved = await EmployeeRepository.GetByIdAsync(employee.Id);
+        Assert.NotNull(retrieved);
+        Assert.Equal(employee.Id, retrieved.Id);
+        
+        // Cleanup
+        await EmployeeRepository.DeleteAsync(employee.Id);
+        var deleted = await EmployeeRepository.GetByIdAsync(employee.Id);
+        Assert.Null(deleted);
+    }
+
+    #endregion
+
+    #region Custom Assertions Helpers
+
+    /// <summary>
+    /// Helper method to assert FauraResult structure.
+    /// Use this pattern in your own tests when working with FauraResult.
+    /// </summary>
+    private static void AssertFauraSuccess<T>(FauraResult<T> result)
+    {
+        Assert.NotNull(result);
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+    }
+
+    /// <summary>
+    /// Helper method to assert FauraError structure.
+    /// </summary>
+    private static void AssertFauraError<T>(FauraResult<T> result, string expectedErrorCode)
+    {
+        Assert.NotNull(result);
+        Assert.False(result.IsSuccess);
+        Assert.Null(result.Data);
+        Assert.NotNull(result.Error);
+        Assert.Equal(expectedErrorCode, result.Error.Code);
+    }
+
+    #endregion
+}
+
+/// <summary>
+/// Example DTO for paginated results.
+/// Replace with your actual PagedResult implementation.
+/// </summary>
+public record PagedResult<T>(
+    IEnumerable<T> Items,
+    int TotalItems,
+    int CurrentPage,
+    int PageSize,
+    int TotalPages
+);

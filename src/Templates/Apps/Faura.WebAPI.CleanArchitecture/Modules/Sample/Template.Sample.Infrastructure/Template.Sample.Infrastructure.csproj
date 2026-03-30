@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Template.Shared.Infrastructure\Template.Shared.Infrastructure.csproj" />
+    <ProjectReference Include="..\Template.Sample.Application\Template.Sample.Application.csproj" />
+  </ItemGroup>
+
+</Project>

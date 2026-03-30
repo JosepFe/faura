@@ -1,0 +1,173 @@
+namespace Faura.IntegrationTest.Configuration.Examples;
+
+using Faura.Infrastructure.IntegrationTesting.Factory;
+using Faura.Infrastructure.IntegrationTesting.Options;
+using Faura.Infrastructure.IntegrationTesting.TestContainers.Configurations;
+using Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+/// <summary>
+/// Example: CustomWebApplicationFactory with multiple containers.
+/// Shows how to configure PostgreSQL + MongoDB + Redis for integration tests.
+/// 
+/// Usage:
+/// 1. Copy this class and rename it to your needs
+/// 2. Update appsettings.Test.json with container configurations
+/// 3. Implement ConfigureTestServices and ConfigureTestDatabase
+/// </summary>
+public class MultiContainerWebApplicationFactory : BaseWebApplicationFactory<Program>
+{
+    private TestContainerInstance<PostgresContainerConfiguration>? _postgresContainer;
+    private TestContainerInstance<MongoContainerConfiguration>? _mongoContainer;
+    private TestContainerInstance<RedisContainerConfiguration>? _redisContainer;
+
+    protected override async Task<IConfiguration> ConfigureTestContainersAsync(
+        IConfiguration configuration
+    )
+    {
+        var containerOptions = configuration.GetSection("Containers").Get<TestContainerOptions>();
+        ArgumentNullException.ThrowIfNull(containerOptions);
+
+        // Start PostgreSQL Container
+        if (containerOptions.Postgres != null)
+        {
+            var pgConfig = new PostgresContainerConfiguration(containerOptions.Postgres);
+            _postgresContainer = new TestContainerInstance<PostgresContainerConfiguration>(pgConfig);
+            await _postgresContainer.StartAsync();
+        }
+
+        // Start MongoDB Container
+        if (containerOptions.Mongo != null)
+        {
+            var mongoConfig = new MongoContainerConfiguration(containerOptions.Mongo);
+            _mongoContainer = new TestContainerInstance<MongoContainerConfiguration>(mongoConfig);
+            await _mongoContainer.StartAsync();
+        }
+
+        // Start Redis Container
+        if (containerOptions.Redis != null)
+        {
+            var redisConfig = new RedisContainerConfiguration(containerOptions.Redis);
+            _redisContainer = new TestContainerInstance<RedisContainerConfiguration>(redisConfig);
+            await _redisContainer.StartAsync();
+        }
+
+        // Override configuration with container connection strings
+        var configOverrides = new Dictionary<string, string?>();
+
+        if (_postgresContainer != null)
+        {
+            configOverrides["ConnectionStrings:DefaultConnection"] = _postgresContainer.ConnectionString;
+            configOverrides["ConnectionStrings:Employee"] = _postgresContainer.ConnectionString;
+        }
+
+        if (_mongoContainer != null)
+        {
+            configOverrides["MongoDb:ConnectionString"] = _mongoContainer.ConnectionString;
+            configOverrides["MongoDb:DatabaseName"] = "test_db";
+        }
+
+        if (_redisContainer != null)
+        {
+            configOverrides["Redis:ConnectionString"] = _redisContainer.ConnectionString;
+        }
+
+        return new ConfigurationBuilder()
+            .AddConfiguration(configuration)
+            .AddInMemoryCollection(configOverrides)
+            .Build();
+    }
+
+    protected override void ConfigureTestServices(
+        IServiceCollection services,
+        IConfiguration configuration
+    )
+    {
+        // Register your test seeders here
+        // services.AddScoped<ITestDataSeeder, YourSeeder>();
+        
+        // Override any services for testing
+        // services.RemoveAll<IYourService>();
+        // services.AddScoped<IYourService, MockYourService>();
+    }
+
+    protected override void ConfigureTestDatabase(
+        IServiceCollection services,
+        IConfiguration configuration
+    )
+    {
+        // Configure your DbContext(s) here
+        // Example for SQL databases:
+        /*
+        services.RemoveAll(typeof(DbContextOptions<YourDbContext>));
+        services.ConfigureDatabase<YourDbContext>(
+            configuration.GetConnectionString("DefaultConnection")!,
+            DatabaseType.PostgreSQL,
+            ServiceLifetime.Scoped
+        );
+        */
+        
+        // Example for MongoDB:
+        /*
+        services.Configure<MongoDbSettings>(options =>
+        {
+            options.ConnectionString = configuration["MongoDb:ConnectionString"]!;
+            options.DatabaseName = configuration["MongoDb:DatabaseName"]!;
+        });
+        */
+    }
+
+    /// <summary>
+    /// Clean up containers when factory is disposed.
+    /// </summary>
+    public new async ValueTask DisposeAsync()
+    {
+        if (_postgresContainer != null)
+            await _postgresContainer.DisposeAsync();
+        
+        if (_mongoContainer != null)
+            await _mongoContainer.DisposeAsync();
+        
+        if (_redisContainer != null)
+            await _redisContainer.DisposeAsync();
+
+        await base.DisposeAsync();
+    }
+}
+
+/// <summary>
+/// Example appsettings.Test.json configuration for multi-container setup:
+/// 
+/// {
+///   "Containers": {
+///     "Postgres": {
+///       "Image": "postgres:15-alpine",
+///       "Port": 5432,
+///       "Username": "testuser",
+///       "Password": "testpass",
+///       "Database": "testdb"
+///     },
+///     "Mongo": {
+///       "Image": "mongo:6",
+///       "Port": 27017,
+///       "Username": "testuser",
+///       "Password": "testpass",
+///       "Database": "testdb"
+///     },
+///     "Redis": {
+///       "Image": "redis:7-alpine",
+///       "Port": 6379
+///     },
+///     "SqlServer": {
+///       "Image": "mcr.microsoft.com/mssql/server:2022-latest",
+///       "Port": 1433,
+///       "Username": "sa",
+///       "Password": "YourStrong@Passw0rd",
+///       "Database": "testdb"
+///     }
+///   }
+/// }
+/// 
+/// </summary>
+/// 
