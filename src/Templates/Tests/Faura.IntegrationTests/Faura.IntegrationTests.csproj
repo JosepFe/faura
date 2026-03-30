@@ -18,8 +18,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Modules\Faura.Infrastructure.IntegrationTesting\Faura.Infrastructure.IntegrationTesting.csproj" />
-		<ProjectReference Include="..\Faura.WebAPI\Faura.WebAPI.csproj" />
+		<ProjectReference Include="..\..\..\Modules\Faura.Infrastructure.IntegrationTesting\Faura.Infrastructure.IntegrationTesting.csproj" />
+		<ProjectReference Include="..\..\Apps\Faura.WebAPI\Faura.WebAPI.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

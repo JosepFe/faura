@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modules\Faura.Infrastructure.GrpcBootstrapper\Faura.Infrastructure.GrpcBootstrapper.csproj" />
-    <ProjectReference Include="..\..\Modules\Faura.Infrastructure.Logger\Faura.Infrastructure.Logger.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Faura.Infrastructure.GrpcBootstrapper\Faura.Infrastructure.GrpcBootstrapper.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Faura.Infrastructure.Logger\Faura.Infrastructure.Logger.csproj" />
   </ItemGroup>
 
 </Project>
