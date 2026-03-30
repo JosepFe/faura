@@ -6,6 +6,9 @@ using Faura.WebAPI.Domain;
 using Faura.WebAPI.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
+/// <summary>
+/// Bootstrapper for infrastructure layer dependencies.
+/// </summary>
 public static class InfrastructureBootstrapper
 {
     public static IServiceCollection RegisterInfrastructureDependencies(this IServiceCollection services, IConfiguration configuration)
@@ -27,21 +30,20 @@ public static class InfrastructureBootstrapper
         if (env.IsDevelopment())
         {
             using var scope = app.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<EmployeeDbContext>();
-            await dbContext.Database.MigrateAsync();
+            var sampleDbContext = scope.ServiceProvider.GetRequiredService<SampleDbContext>();
+            await sampleDbContext.Database.MigrateAsync();
         }
     }
 
     private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        services.ConfigureDatabase<EmployeeDbContext>(configuration, "Employee", DatabaseType.PostgreSQL);
+        services.ConfigureDatabase<SampleDbContext>(configuration, "Sample", DatabaseType.PostgreSQL);
         return services;
     }
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
+        services.AddScoped<ISampleRepository, SampleRepository>();
         return services;
     }
 }

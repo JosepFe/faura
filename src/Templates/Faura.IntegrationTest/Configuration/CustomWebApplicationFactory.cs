@@ -1,4 +1,6 @@
-﻿using Faura.Infrastructure.UnitOfWork.Common;
+﻿namespace Faura.IntegrationTest.Configuration;
+
+using Faura.Infrastructure.UnitOfWork.Common;
 using Faura.Infrastructure.UnitOfWork.Enums;
 using Faura.IntegrationTest.Seeders;
 using Faura.WebAPI.Infrastructure.Persistence;
@@ -12,8 +14,10 @@ using Faura.Infrastructure.IntegrationTesting.Seeders;
 using Faura.Infrastructure.IntegrationTesting.TestContainers.Configurations;
 using Faura.Infrastructure.IntegrationTesting.TestContainers.Core;
 
-namespace Faura.IntegrationTest.Configuration;
-
+/// <summary>
+/// Custom WebApplicationFactory for integration tests.
+/// Configures test containers (PostgreSQL) and overrides services for testing.
+/// </summary>
 public class CustomWebApplicationFactory : BaseWebApplicationFactory<Program>
 {
     protected override async Task<IConfiguration> ConfigureTestContainersAsync(
@@ -33,7 +37,7 @@ public class CustomWebApplicationFactory : BaseWebApplicationFactory<Program>
             .AddInMemoryCollection(
                 new Dictionary<string, string?>
                 {
-                    ["ConnectionStrings:Employee"] = containerInstance.ConnectionString,
+                    ["ConnectionStrings:Sample"] = containerInstance.ConnectionString,
                 }
             )
             .Build();
@@ -44,7 +48,7 @@ public class CustomWebApplicationFactory : BaseWebApplicationFactory<Program>
         IConfiguration configuration
     )
     {
-        services.AddScoped<ITestDataSeeder, EmployeeTestDataSeeder>();
+        services.AddScoped<ITestDataSeeder, SampleTestDataSeeder>();
     }
 
     protected override void ConfigureTestDatabase(
@@ -52,9 +56,9 @@ public class CustomWebApplicationFactory : BaseWebApplicationFactory<Program>
         IConfiguration configuration
     )
     {
-        services.RemoveAll(typeof(DbContextOptions<EmployeeDbContext>));
-        services.ConfigureDatabase<EmployeeDbContext>(
-            configuration.GetConnectionString("Employee")!,
+        services.RemoveAll(typeof(DbContextOptions<SampleDbContext>));
+        services.ConfigureDatabase<SampleDbContext>(
+            configuration.GetConnectionString("Sample")!,
             DatabaseType.PostgreSQL,
             ServiceLifetime.Scoped
         );

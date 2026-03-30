@@ -1,0 +1,32 @@
+# docker-compose.yml
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: template_mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
+    volumes:
+      - template_mongodb_data:/data/db
+      - template_mongodb_config:/data/configdb
+    networks:
+      - template_network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  template_mongodb_data:
+    driver: local
+  template_mongodb_config:
+    driver: local
+
+networks:
+  template_network:
+    driver: bridge

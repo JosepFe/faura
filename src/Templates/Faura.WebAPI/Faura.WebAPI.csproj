@@ -4,7 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	<UserSecretsId>bc927e2b-51aa-47ca-b33f-8175e77799fa</UserSecretsId>
+    <LangVersion>latest</LangVersion>
+    <UserSecretsId>bc927e2b-51aa-47ca-b33f-8175e77799fa</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,12 +28,12 @@
     <ProjectReference Include="..\..\Modules\Faura.Infrastructure.UnitOfWork\Faura.Infrastructure.UnitOfWork.csproj" />
   </ItemGroup>
 
-	<ItemGroup>
-		<InternalsVisibleTo Include="Faura.IntegrationTest" />
-	</ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Faura.IntegrationTest" />
+  </ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Infrastructure\Persistence\Migrations\" />
-	</ItemGroup>
+  <ItemGroup>
+    <Folder Include="Infrastructure\Persistence\Migrations\" />
+  </ItemGroup>
 
 </Project>
