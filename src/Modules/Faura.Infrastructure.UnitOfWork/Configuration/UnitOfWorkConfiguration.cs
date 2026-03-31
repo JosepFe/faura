@@ -1,5 +1,6 @@
-﻿namespace Faura.Infrastructure.UnitOfWork;
+﻿namespace Faura.Infrastructure.UnitOfWork.Configuration;
 
+using Faura.Infrastructure.UnitOfWork.Core;
 using Faura.Infrastructure.UnitOfWork.Projectors;
 using Faura.Infrastructure.UnitOfWork.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ public static class UnitOfWorkConfiguration
     public static IServiceCollection AddUnitOfWork<TContext>(this IServiceCollection services) 
         where TContext : DbContext
     {
-        services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork<TContext>>();
+        services.AddScoped<IUnitOfWork, Core.UnitOfWork<TContext>>();
         return services;
     }
 

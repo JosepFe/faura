@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.Exceptions;
+﻿namespace Faura.Infrastructure.UnitOfWork.Exceptions.Repository;
 
 /// <summary>
 /// Base exception for repository-related errors

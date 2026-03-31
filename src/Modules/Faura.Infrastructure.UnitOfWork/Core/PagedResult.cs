@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.Models;
+﻿namespace Faura.Infrastructure.UnitOfWork.Core;
 
 /// <summary>
 /// Represents a paginated result set

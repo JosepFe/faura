@@ -3,7 +3,7 @@
 using System.Runtime.Serialization;
 
 [Serializable]
-public class NullContextException : Exception
+public class NullContextException : UnitOfWorkException
 {
     public NullContextException() : base()
     {

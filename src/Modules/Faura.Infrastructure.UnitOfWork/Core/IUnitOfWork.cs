@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.UnitOfWork;
+﻿namespace Faura.Infrastructure.UnitOfWork.Core;
 
 using System.Data;
 using Microsoft.EntityFrameworkCore.Storage;

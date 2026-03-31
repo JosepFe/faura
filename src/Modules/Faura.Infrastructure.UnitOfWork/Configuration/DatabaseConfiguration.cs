@@ -1,6 +1,6 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.Common;
+﻿namespace Faura.Infrastructure.UnitOfWork.Configuration;
 
-using Faura.Infrastructure.UnitOfWork.Enums;
+using Faura.Infrastructure.UnitOfWork.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

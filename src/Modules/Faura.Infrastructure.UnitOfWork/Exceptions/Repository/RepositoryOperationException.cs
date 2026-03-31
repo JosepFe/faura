@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.Exceptions;
+﻿namespace Faura.Infrastructure.UnitOfWork.Exceptions.Repository;
 
 /// <summary>
 /// Exception for errors during repository operations (create, update, delete)
