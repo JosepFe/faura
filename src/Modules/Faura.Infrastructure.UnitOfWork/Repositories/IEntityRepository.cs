@@ -1,7 +1,6 @@
 ﻿namespace Faura.Infrastructure.UnitOfWork.Repositories;
 
-using Faura.Infrastructure.UnitOfWork.Enums;
-using Faura.Infrastructure.UnitOfWork.Models;
+using Faura.Infrastructure.UnitOfWork.Core;
 using System.Linq.Expressions;
 
 /// <summary>

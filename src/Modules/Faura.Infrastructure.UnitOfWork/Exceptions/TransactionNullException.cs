@@ -3,7 +3,7 @@
 using System.Runtime.Serialization;
 
 [Serializable]
-public class NullTransactionException : Exception
+public class NullTransactionException : UnitOfWorkException
 {
     public NullTransactionException() : base()
     {

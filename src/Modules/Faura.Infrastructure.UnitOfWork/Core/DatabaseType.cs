@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.Enums;
+﻿namespace Faura.Infrastructure.UnitOfWork.Core;
 
 public enum DatabaseType
 {

@@ -19,13 +19,17 @@ public class Projector<TEntity> : IProjector<TEntity> where TEntity : class
     {
         var query = _context.Set<TEntity>().AsQueryable();
 
+        // Apply projection first
+        var projectionQuery = projection(query);
+
+        // Then apply pagination if requested
         if (page.HasValue && pageSize.HasValue)
         {
-            query = query.Skip((page.Value - 1) * pageSize.Value)
-                        .Take(pageSize.Value);
+            projectionQuery = projectionQuery
+                .Skip((page.Value - 1) * pageSize.Value)
+                .Take(pageSize.Value);
         }
 
-        var projectionQuery = projection(query);
         return await projectionQuery.ToListAsync();
     }
 }

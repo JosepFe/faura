@@ -1,9 +1,7 @@
 ﻿namespace Faura.Infrastructure.UnitOfWork.Repositories;
 
-using Faura.Infrastructure.UnitOfWork.Enums;
-using Faura.Infrastructure.UnitOfWork.Exceptions;
-using Faura.Infrastructure.UnitOfWork.Models;
-using Microsoft.Data.SqlClient;
+using Faura.Infrastructure.UnitOfWork.Core;
+using Faura.Infrastructure.UnitOfWork.Exceptions.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -421,16 +419,5 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
         result.HasNextPage = page < result.TotalPages;
 
         return result;
-    }
-
-    private (string Query, object[] ParameterValues) BuildStoredProcedureCommand(
-        string procedureName,
-        SqlParameter[] parameters)
-    {
-        var paramList = parameters.ToList();
-        var paramPlaceholders = string.Join(", ", paramList.Select((p, i) => $"@p{i}"));
-        var paramValues = paramList.Select(p => p.Value).ToArray();
-
-        return ($"EXEC {procedureName} {paramPlaceholders}", paramValues);
     }
 }

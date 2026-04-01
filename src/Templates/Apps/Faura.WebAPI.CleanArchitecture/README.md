@@ -11,7 +11,7 @@
 - ✅ Multi-database (MongoDB, SQL Server, PostgreSQL, MySQL)
 - ✅ Complete Sample module as reference
 - ✅ Docker Compose for development
-- ✅ StyleCop + SonarAnalyzer integrated
+- ✅ Roslynator + SonarAnalyzer integrated
 
 ## 🏗️ Architecture
 
@@ -181,8 +181,8 @@ Includes complete example of:
 
 ## 🔧 Configuración Adicional
 
-### StyleCop
-El template incluye `stylecop.json` con reglas personalizadas. Personalízalo según tus necesidades.
+### Analizadores de Código
+El template incluye **Roslynator** y **SonarAnalyzer** configurados en `Directory.Build.props`. Personaliza las reglas en archivos `.editorconfig` o `.globalconfig` según tus necesidades.
 
 ### Docker
 El `docker-compose.yml` incluye MongoDB. Agrega otros servicios según necesites (Redis, RabbitMQ, etc.).

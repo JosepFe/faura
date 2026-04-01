@@ -93,7 +93,7 @@ dotnet test --verbosity detailed
 # Format code
 dotnet format
 
-# Analyze code (StyleCop + SonarAnalyzer)
+# Analyze code (Roslynator + SonarAnalyzer)
 dotnet build -t:Rebuild
 
 # List analyzers

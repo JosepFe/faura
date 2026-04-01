@@ -1,4 +1,4 @@
-﻿namespace Faura.Infrastructure.UnitOfWork.UnitOfWork;
+﻿namespace Faura.Infrastructure.UnitOfWork.Core;
 
 using System.Data;
 using Faura.Infrastructure.UnitOfWork.Exceptions;
@@ -40,15 +40,25 @@ public class UnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
         if (transaction == null)
             throw new NullTransactionException("Transaction cannot be null to perform transaction operations.");
 
+        var committed = false;
         try
         {
             await SaveChanges();
-
             transaction.Commit();
+            committed = true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            transaction.Rollback();
+            // Try to rollback, but don't hide the original exception
+            try
+            {
+                if (!committed)
+                    transaction.Rollback();
+            }
+            catch
+            {
+                // Swallow rollback exceptions to preserve the original exception
+            }
             throw;
         }
         finally
